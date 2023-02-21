@@ -1,0 +1,2 @@
+Lenke til Github:
+https://github.com/Bsktrrl/Qt
