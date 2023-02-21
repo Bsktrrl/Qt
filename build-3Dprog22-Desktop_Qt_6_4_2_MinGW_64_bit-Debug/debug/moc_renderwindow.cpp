@@ -7,7 +7,7 @@
 *****************************************************************************/
 
 #include <memory>
-#include "../../../Qt1/3Dprog22/renderwindow.h"
+#include "../../3Dprog22/renderwindow.h"
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'renderwindow.h' doesn't include <QObject>."
