@@ -6,11 +6,12 @@
 class House : public VisualObject
 {
 public:
-    House(std::string name);
+    House();
     ~House() override;
 
     void init(GLint matrixUniform) override;
     void draw() override;
+    void draw(QMatrix4x4& transformMatrix) override;
 };
 
 #endif // HOUSE_H

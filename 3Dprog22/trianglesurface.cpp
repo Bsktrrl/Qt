@@ -1,10 +1,8 @@
 #include "trianglesurface.h"
 #include "fstream"
 
-TriangleSurface::TriangleSurface(std::string name) : VisualObject()
+TriangleSurface::TriangleSurface() : VisualObject()
 {
-    setName(name);
-
   //         x    y    z       r    g    b
   Vertex v0{0.0, 0.0, 0.0,    1.0, 0.0, 0.0};    mVertices.push_back(v0);
   Vertex v1{0.5, 0.0, 0.0,    0.0, 1.0, 0.0};    mVertices.push_back(v1);
@@ -14,10 +12,8 @@ TriangleSurface::TriangleSurface(std::string name) : VisualObject()
   Vertex v5{0.0, 0.5, 0.0,    1.0, 0.0, 0.0};    mVertices.push_back(v5);
 }
 
-TriangleSurface::TriangleSurface(std::string name, std::string filnavn) : VisualObject()
+TriangleSurface::TriangleSurface(std::string filnavn) : VisualObject()
 {
-    setName(name);
-
     readFile(filnavn);
 }
 
@@ -102,6 +98,17 @@ void TriangleSurface::draw()
     glBindVertexArray( mVAO );
     glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
     glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
+}
+
+void TriangleSurface::draw(QMatrix4x4& transformMatrix)
+{
+    if (isActive)
+    {
+        transformMatrix *= mMatrix;
+        glBindVertexArray( mVAO );
+        glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, transformMatrix.constData());
+        glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
+    }
 }
 
 

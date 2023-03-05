@@ -1,10 +1,12 @@
 release/main.o
 release/camera.o
 release/collider.o
+release/component.o
 release/consoleapplication.o
 release/cube.o
 release/disc.o
 release/door.o
+release/gameobject.o
 release/house.o
 release/interpolation.o
 release/landscapes.o
@@ -13,6 +15,7 @@ release/mainwindow.o
 release/octahedronball.o
 release/parabel.o
 release/perlinnoise.o
+release/pickup.o
 release/player.o
 release/points.o
 release/ppm.o
@@ -20,9 +23,11 @@ release/renderwindow.o
 release/shader.o
 release/spherecollider.o
 release/tetraeder.o
+release/transform.o
 release/trianglesurface.o
 release/vertex.o
 release/visualobject.o
+release/visualobjectcomponent.o
 release/xyz.o
 release/moc_mainwindow.o
 release/moc_renderwindow.o

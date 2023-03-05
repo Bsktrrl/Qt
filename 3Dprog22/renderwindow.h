@@ -18,6 +18,7 @@
 class QOpenGLContext;
 class Shader;
 class MainWindow;
+class GameObject;
 
 /// This inherits from QWindow to get access to the Qt functionality and
 // OpenGL surface.
@@ -40,10 +41,16 @@ public:
 
     inline static std::unordered_map<int, bool> Keymap;
 
-    std::vector<VisualObject*> GetAllObjects();
-    std::vector<VisualObject*> GetColliderObjects(int scene);
+    std::vector<GameObject*> GetAllObjects();
+    std::vector<GameObject*> GetColliderObjects(int scene);
+
+    GLint GetMatrixUniform() { return mMatrixUniform;}
+    GLint GetVMatrixUniform() { return mVmatrixUniform;}
+    GLint GetPMatrixUniform() { return mPmatrixUniform;}
 
     void ChangeScene(int scene);
+
+    void AddGameObject(GameObject* object, std::string name);
 
 private slots:
     void render();          //the actual render - function
@@ -74,6 +81,7 @@ private:
 
     //Vertex m_v;
     std::vector<VisualObject*> mObjects;
+    std::unordered_map<std::string, GameObject*> mGameObjects;
 
     Camera* mCamera;
 
@@ -116,10 +124,6 @@ private:
 
     int activeScene;
 
-    float NPCX;
-    bool NPCdirection;
-    void moveNPC();
-
 protected:
     //The QWindow that we inherit from have these functions to capture
     // - mouse and keyboard.
@@ -135,6 +139,8 @@ protected:
     //    void wheelEvent(QWheelEvent *event) override{}
 
     void input();
+
+    void resizeEvent(QResizeEvent *) override;
 };
 
 #endif // RENDERWINDOW_H

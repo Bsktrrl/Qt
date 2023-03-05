@@ -1,10 +1,12 @@
 debug/main.o
 debug/camera.o
 debug/collider.o
+debug/component.o
 debug/consoleapplication.o
 debug/cube.o
 debug/disc.o
 debug/door.o
+debug/gameobject.o
 debug/house.o
 debug/interpolation.o
 debug/landscapes.o
@@ -13,6 +15,7 @@ debug/mainwindow.o
 debug/octahedronball.o
 debug/parabel.o
 debug/perlinnoise.o
+debug/pickup.o
 debug/player.o
 debug/points.o
 debug/ppm.o
@@ -20,9 +23,11 @@ debug/renderwindow.o
 debug/shader.o
 debug/spherecollider.o
 debug/tetraeder.o
+debug/transform.o
 debug/trianglesurface.o
 debug/vertex.o
 debug/visualobject.o
+debug/visualobjectcomponent.o
 debug/xyz.o
 debug/moc_mainwindow.o
 debug/moc_renderwindow.o

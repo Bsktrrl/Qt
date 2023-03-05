@@ -1,34 +1,46 @@
 #include "spherecollider.h"
-#include "visualobject.h"
+#include "gameobject.h"
 #include "renderwindow.h"
-#include "logger.h"
 
-SphereCollider::SphereCollider(VisualObject* _owner, float _radius)
+SphereCollider::SphereCollider(GameObject* _owner, float _radius)
 {
     owner = _owner;
-    offset = QVector3D(0, 0, 0);
+    offset = QVector3D(0,0,0);
     radius = _radius;
     owner->SetCollissionActive(true);
     owner->setCollider(this);
+    owner->AddComponent(this);
 }
 
-SphereCollider::SphereCollider(VisualObject *_owner, float _radius, QVector3D relativePos)
+SphereCollider::SphereCollider(GameObject* _owner, float _radius, QVector3D relativePos)
 {
     owner = _owner;
     offset = relativePos;
     radius = _radius;
     owner->SetCollissionActive(true);
     owner->setCollider(this);
+    owner->AddComponent(this);
 }
 
-void SphereCollider::OnUpdate()
+SphereCollider::~SphereCollider()
 {
-    std::vector<VisualObject*> objects = RenderWindow::instance->GetColliderObjects(owner->getScene());
+
+}
+
+void SphereCollider::awake()
+{
+
+}
+
+void SphereCollider::update()
+{
+    std::vector<GameObject*> objects = RenderWindow::instance->GetColliderObjects(owner->getScene());
 
     for (auto it = objects.begin(); it != objects.end(); it++)
     {
         if ((*it) != owner)
         {
+
             float distance = (owner->getPosition3D() + offset).distanceToPoint((*it)->getPosition3D());
 
             Collider* col = (*it)->getCollider();

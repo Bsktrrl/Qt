@@ -7,13 +7,14 @@ class TriangleSurface : public VisualObject
 {
 
 public:
-   TriangleSurface(std::string name);
-   TriangleSurface(std::string name, std::string filnavn);
+   TriangleSurface();
+   TriangleSurface(std::string filnavn);
    ~TriangleSurface() override;
 
    void readFile(std::string filnavn);
    void init(GLint shader) override;
    void draw() override;
+   void draw(QMatrix4x4& transformMatrix) override;
 };
 
 #endif //TRIANGLESURFACE_H

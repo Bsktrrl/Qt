@@ -1,30 +1,23 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "visualobject.h"
+#include "gameobject.h"
 
+class VisualObjectComponent;
 class SphereCollider;
 
-class Player : public VisualObject
+class Player : public GameObject
 {
 public:
-    Player(std::string name, int n = 0);
+    Player();
     ~Player() override;
 
-    void init(GLint matrixUniform) override;
-    void draw() override;
+    VisualObjectComponent* Mesh;
+    SphereCollider* Collider;
 
-    SphereCollider* collider;
-    void collission(VisualObject* other) override;
-
-private:
-    int m_recursions;
-    int m_indeks;
-
-    void MakeTriangle(const QVector3D& v1, const QVector3D& v2, const QVector3D& v3);
-    void subDivide(const QVector3D& a, const QVector3D& b, const QVector3D& c, int n);
-
-    void PlayerBuild();
+    virtual void awake() override;
+    virtual void update() override;
+    void collission(GameObject* other) override;
 };
 
 #endif // PLAYER_H

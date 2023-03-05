@@ -8,14 +8,12 @@ class SphereCollider;
 class OctahedronBall : public VisualObject
 {
 public:
-   OctahedronBall(std::string name, int n=0);
+   OctahedronBall(int n=0);
    ~OctahedronBall();
 
    void init(GLint matrixUniform) override;
    void draw() override;
-
-   SphereCollider* collider;
-   void collission(VisualObject* other) override;
+   void draw(QMatrix4x4& transformMatrix) override;
 
 private:
    int m_recursions;

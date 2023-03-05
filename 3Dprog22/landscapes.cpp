@@ -1,13 +1,11 @@
 #include "landscapes.h"
 
-Landscape::Landscape(std::string name)
+Landscape::Landscape()
 {
-    setName(name);
 }
 
-Landscape::Landscape(std::string name, QVector2D bottomLeft, QVector2D topRight)
+Landscape::Landscape(QVector2D bottomLeft, QVector2D topRight)
 {
-    setName(name);
 
     float minX = bottomLeft.x();
     float maxX = topRight.x();
@@ -94,6 +92,16 @@ void Landscape::draw()
     {
         glBindVertexArray( mVAO );
         glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
+        glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
+    }
+}
+void Landscape::draw(QMatrix4x4& transformMatrix)
+{
+    if (isActive)
+    {
+        transformMatrix *= mMatrix;
+        glBindVertexArray( mVAO );
+        glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, transformMatrix.constData());
         glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
     }
 }

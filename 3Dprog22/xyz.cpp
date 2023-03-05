@@ -1,9 +1,7 @@
 #include "xyz.h"
 
-XYZ::XYZ(std::string name) : VisualObject()
+XYZ::XYZ() : VisualObject()
 {
-    setName(name);
-
     mVertices.push_back(Vertex{0.0f, 0.0f, 0.0f,    1.0f, 0.0f, 0.0f});
     mVertices.push_back(Vertex{1.0f, 0.0f, 0.0f,    1.0f, 0.0f, 0.0f});
     mVertices.push_back(Vertex{0.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f});
@@ -68,4 +66,15 @@ void XYZ::draw()
    glBindVertexArray( mVAO );
    glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
    glDrawArrays(GL_LINES, 0, mVertices.size());
+}
+
+void XYZ::draw(QMatrix4x4& transformMatrix)
+{
+    if (isActive)
+    {
+        transformMatrix *= mMatrix;
+        glBindVertexArray( mVAO );
+        glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, transformMatrix.constData());
+        glDrawArrays(GL_LINES, 0, mVertices.size());
+    }
 }

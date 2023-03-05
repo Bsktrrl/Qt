@@ -1,9 +1,7 @@
 #include "house.h"
 
-House::House(std::string name) : VisualObject()
+House::House() : VisualObject()
 {
-    setName(name);
-
     // -y veggen - Door
     mVertices.push_back(Vertex{-1,    -1, -1,    1, 0, 0});
     mVertices.push_back(Vertex{-0.3f, -1, -1,    1, 0, 0});
@@ -114,4 +112,14 @@ void House::draw()
  glBindVertexArray( mVAO );
  glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
  glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
+}
+void House::draw(QMatrix4x4& transformMatrix)
+{
+    if (isActive)
+    {
+        transformMatrix *= mMatrix;
+        glBindVertexArray( mVAO );
+        glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, transformMatrix.constData());
+        glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
+    }
 }

@@ -6,8 +6,8 @@
 class Parabel : public VisualObject
 {
 public:
-    Parabel(std::string name);
-    Parabel(std::string name, float Ax, float Ay, float Bx, float By, float Cx, float Cy, float Dx, float Dy, float Ex, float Ey, float Fx, float Fy, float Gx, float Gy);
+    Parabel();
+    Parabel(float Ax, float Ay, float Bx, float By, float Cx, float Cy, float Dx, float Dy, float Ex, float Ey, float Fx, float Fy, float Gx, float Gy);
     ~Parabel();
 
     float Xa;
@@ -16,6 +16,7 @@ public:
 
     void init(GLint matrixUniform) override;
     void draw() override;
+    void draw(QMatrix4x4& transformMatrix) override;
 
     float f(float z) {return (Xa * z * z) + (Xb * z) + Xc; };
 

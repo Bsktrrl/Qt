@@ -2,15 +2,12 @@
 #include <cmath>
 #include "logger.h"
 
-Parabel::Parabel(std::string name)
+Parabel::Parabel()
 {
-    setName(name);
 }
 
-Parabel::Parabel(std::string name, float Ax, float Ay, float Bx, float By, float Cx, float Cy, float Dx, float Dy, float Ex, float Ey, float Fx, float Fy, float Gx, float Gy)
+Parabel::Parabel(float Ax, float Ay, float Bx, float By, float Cx, float Cy, float Dx, float Dy, float Ex, float Ey, float Fx, float Fy, float Gx, float Gy)
 {
-    setName(name);
-
     // 1) - Make a Matrix with the y-values
     float* Ymatrix = new float [1*7]
     {
@@ -223,4 +220,14 @@ void Parabel::draw()
     glBindVertexArray( mVAO );
     glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
     glDrawArrays(GL_LINE_STRIP, 0, mVertices.size());
+}
+void Parabel::draw(QMatrix4x4& transformMatrix)
+{
+    if (isActive)
+    {
+        transformMatrix *= mMatrix;
+        glBindVertexArray( mVAO );
+        glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, transformMatrix.constData());
+        glDrawArrays(GL_LINE_STRIP, 0, mVertices.size());
+    }
 }

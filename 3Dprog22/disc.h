@@ -6,17 +6,15 @@
 class Disc : public VisualObject
 {
 public:
-   Disc(std::string name);
-   Disc(std::string name, std::string filnavn);
+   Disc();
+   Disc(std::string filnavn);
    ~Disc() override;
    void readFile(std::string filnavn);
    void writeFile(std::string filnavn);
    void init(GLint matrixUniform) override;
    void draw() override;
+   void draw(QMatrix4x4& transformMatrix) override;
    void construct();
-
-   void move(float dt);
-   void move(float dx, float dy, float dz);
 
 protected:
    std::vector<GLuint> mIndices;   	// Til indeksering

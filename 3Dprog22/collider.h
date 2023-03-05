@@ -1,14 +1,18 @@
 #ifndef COLLIDER_H
 #define COLLIDER_H
+#include "component.h"
 
-class VisualObject;
+class GameObject;
 
-class Collider
+class Collider : public Component
 {
 public:
     Collider();
+    virtual ~Collider() {};
+    virtual void awake() = 0;
+    virtual void update() = 0;
 
-    VisualObject* owner;
+    GameObject* owner;
 };
 
 #endif // COLLIDER_H

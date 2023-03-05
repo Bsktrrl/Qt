@@ -1,9 +1,7 @@
 #include "cube.h"
 
-Cube::Cube(std::string name) : VisualObject()
+Cube::Cube() : VisualObject()
 {
-    setName(name);
-
        // -y veggen
        mVertices.push_back(Vertex{-1,-1,-1,1,0,0});
        mVertices.push_back(Vertex{1,-1,1,1,0,0});
@@ -97,4 +95,14 @@ void Cube::draw()
     glBindVertexArray( mVAO );
     glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
     glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
+}
+void Cube::draw(QMatrix4x4& transformMatrix)
+{
+    if (isActive)
+    {
+        transformMatrix *= mMatrix;
+        glBindVertexArray( mVAO );
+        glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, transformMatrix.constData());
+        glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
+    }
 }

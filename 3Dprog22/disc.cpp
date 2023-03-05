@@ -1,13 +1,11 @@
 #include "disc.h"
 
-Disc::Disc(std::string name)
+Disc::Disc()
 {
-    setName(name);
 }
 
-Disc::Disc(std::string name, std::string filnavn)
+Disc::Disc(std::string filnavn)
 {
-    setName(name);
 }
 
 Disc::~Disc()
@@ -80,6 +78,16 @@ void Disc::draw()
     glDrawElements(GL_TRIANGLE_FAN, mVertices.size(), GL_UNSIGNED_INT, reinterpret_cast<const void*>(0));//mVertices.size());
 
 }
+void Disc::draw(QMatrix4x4& transformMatrix)
+{
+    if (isActive)
+    {
+        transformMatrix *= mMatrix;
+        glBindVertexArray( mVAO );
+        glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, transformMatrix.constData());
+        glDrawArrays(GL_TRIANGLE_FAN, 0, mVertices.size());
+    }
+}
 
 void Disc::construct()
 {
@@ -102,33 +110,4 @@ void Disc::construct()
     {
        mIndices.push_back(i);
     }
-}
-
-void Disc::move(float dt)
-{
-//    float degrees = (180 * dt) / M_PI;
-//    mRotation.rotate(degrees, 0, 0, 1);
-//    mMatrix = mRotation;
-
-    QVector3D ds = mVelocity * dt;
-
-    // mPosition = mPosition + ds;		// hvis mPosisjon er Vector3d
-    mPosition.translate(ds.x(), ds.y(), ds.z());	// hvis mPosisjon er Matrix4x4
-
-    // normalen kan generelt være en parameter inn
-    QVector3D normal = QVector3D{0.0f, 1.0f, 0.0f};
-
-    // bruker kryssprodukt for å finne rotasjonsvektor
-    QVector3D rotation = QVector3D::crossProduct(normal, mVelocity);
-    rotation.normalize();
-
-    // Bruk formelen "ds = r dt ==> dt = ds/r" for å finne ut hvor mye hjulet har rotert og oppdater rotasjonsmatrisen.
-    // Husk å starte med mRotation som identitetsmatrise
-
-    mMatrix = mPosition * mRotation;		// hvis mPosition og mRotation er Matrix4x4
-}
-
-void Disc::move(float dx, float dy, float dz)
-{
-
 }

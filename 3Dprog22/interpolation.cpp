@@ -1,14 +1,11 @@
 #include "interpolation.h"
 
-Interpolation::Interpolation(std::string name)
+Interpolation::Interpolation()
 {
-    setName(name);
 }
 
-Interpolation::Interpolation(std::string name, QVector2D a, QVector2D b, QVector2D c, QVector2D d)
+Interpolation::Interpolation(QVector2D a, QVector2D b, QVector2D c, QVector2D d)
 {
-    setName(name);
-
     A.setRow(0, QVector4D(a.x() * a.x() * a.x(), a.x() * a.x(), a.x(), 1));
     A.setRow(1, QVector4D(b.x() * b.x() * b.x(), b.x() * b.x(), b.x(), 1));
     A.setRow(2, QVector4D(c.x() * c.x() * c.x(), c.x() * c.x(), c.x(), 1));
@@ -93,4 +90,14 @@ void Interpolation::draw()
     glBindVertexArray( mVAO );
     glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
     glDrawArrays(GL_LINE_STRIP, 0, mVertices.size());
+}
+void Interpolation::draw(QMatrix4x4& transformMatrix)
+{
+    if (isActive)
+    {
+        transformMatrix *= mMatrix;
+        glBindVertexArray( mVAO );
+        glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, transformMatrix.constData());
+        glDrawArrays(GL_LINE_STRIP, 0, mVertices.size());
+    }
 }

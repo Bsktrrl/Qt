@@ -6,12 +6,13 @@
 class Tetraeder : public VisualObject
 {
 public:
-    Tetraeder(std::string name);
-    Tetraeder(std::string name, Position pos, QVector3D scale);
+    Tetraeder();
+    Tetraeder(Position pos, QVector3D scale);
     ~Tetraeder();
 
     void init(GLint matrixUniform) override;
     void draw() override;
+    void draw(QMatrix4x4& transformMatrix) override;
 
 private:
     QVector2D rotatePoint(QVector2D point, float angle);

@@ -1,14 +1,11 @@
 #include "points.h"
 
-Points::Points(std::string name)
+Points::Points()
 {
-    setName(name);
 }
 
-Points::Points(std::string name, float Ax, float Ay, float Bx, float By, float Cx, float Cy, float Dx, float Dy, float Ex, float Ey, float Fx, float Fy, float Gx, float Gy, float Hx, float Hy, float Ix, float Iy, float Jx, float Jy)
+Points::Points(float Ax, float Ay, float Bx, float By, float Cx, float Cy, float Dx, float Dy, float Ex, float Ey, float Fx, float Fy, float Gx, float Gy, float Hx, float Hy, float Ix, float Iy, float Jx, float Jy)
 {
-    setName(name);
-
     mVertices.push_back(Vertex(Position(0, Ax, Ay), Color(1.f, 0, 1.f)));
     mVertices.push_back(Vertex(Position(0, Bx, By), Color(1.f, 0, 1.f)));
     mVertices.push_back(Vertex(Position(0, Cx, Cy), Color(1.f, 0, 1.f)));
@@ -78,4 +75,15 @@ void Points::draw()
     glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
     glPointSize(4.f);
     glDrawArrays(GL_POINTS, 0, mVertices.size());
+}
+
+void Points::draw(QMatrix4x4& transformMatrix)
+{
+    if (isActive)
+    {
+        transformMatrix *= mMatrix;
+        glBindVertexArray( mVAO );
+        glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, transformMatrix.constData());
+        glDrawArrays(GL_POINTS, 0, mVertices.size());
+    }
 }

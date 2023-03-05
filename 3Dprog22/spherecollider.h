@@ -2,19 +2,19 @@
 #define SPHERECOLLIDER_H
 
 #include "collider.h"
-#include "QVector3D"
-
-class VisualObject;
+#include <QVector3D>
 
 class SphereCollider : public Collider
 {
 public:
-    SphereCollider(VisualObject* owner, float radius);
-    SphereCollider(VisualObject* owner, float radius, QVector3D relativePos);
+    SphereCollider(GameObject* owner, float radius);
+    SphereCollider(GameObject* owner, float radius, QVector3D offset);
+    virtual ~SphereCollider() override;
 
-    void OnUpdate();
+    void awake() override;
+    void update() override;
+
     float radius;
-
     QVector3D offset;
 };
 

@@ -22,11 +22,14 @@
 #include "parabel.h"
 #include "points.h"
 #include "interpolation.h"
-#include "player.h"
 #include "landscapes.h"
 #include "house.h"
 #include "door.h"
 #include "cube.h"
+#include "gameobject.h"
+#include "player.h"
+#include "transform.h"
+#include "pickup.h"
 
 RenderWindow* RenderWindow::instance;
 
@@ -75,27 +78,12 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
 
 
     //Make The Window appear
-    mObjects.push_back(new XYZ("XYZ"));
+    mObjects.push_back(new XYZ());
 
-    mMap.insert(std::pair<std::string, VisualObject*>{"Landscape", new Landscape("Landscape", QVector2D(-10, -10), QVector2D(10, 10))});
+    mMap.insert(std::pair<std::string, VisualObject*>{"Landscape", new Landscape(QVector2D(-10, -10), QVector2D(10, 10))});
 
-    mMap.insert(std::pair<std::string, VisualObject*>{"Player", new Player("Player")});
-    mMap["Player"]->move(-10.f, 0.f, 0.f);
-
-    mMap.insert(std::pair<std::string, VisualObject*>{"PickUp1", new OctahedronBall("PickUp1", 0)});
+    mMap.insert(std::pair<std::string, VisualObject*>{"PickUp1", new OctahedronBall(0)});
     mMap["PickUp1"]->move(4.f, 0.f, 0.f);
-    mMap.insert(std::pair<std::string, VisualObject*>{"PickUp2", new OctahedronBall("PickUp2", 1)});
-    mMap["PickUp2"]->move(8.f, 0.f, 0.f);
-    mMap.insert(std::pair<std::string, VisualObject*>{"PickUp3", new OctahedronBall("PickUp3", 2)});
-    mMap["PickUp3"]->move(12.f, 0.f, 0.f);
-    mMap.insert(std::pair<std::string, VisualObject*>{"PickUp4", new OctahedronBall("PickUp4", 3)});
-    mMap["PickUp4"]->move(16.f, 0.f, 0.f);
-    mMap.insert(std::pair<std::string, VisualObject*>{"PickUp5", new OctahedronBall("PickUp5", 4)});
-    mMap["PickUp5"]->move(20.f, 0.f, 0.f);
-    mMap.insert(std::pair<std::string, VisualObject*>{"PickUp6", new OctahedronBall("PickUp6", 5)});
-    mMap["PickUp6"]->move(24.f, 0.f, 0.f);
-    mMap.insert(std::pair<std::string, VisualObject*>{"PickUp7", new OctahedronBall("PickUp7", 6)});
-    mMap["PickUp7"]->move(28.f, 0.f, 0.f);
 
     pAx = -3; pAy = 3;
     pBx = -2; pBy = 2;
@@ -105,33 +93,29 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     pFx = 2; pFy = 2;
     pGx = 3; pGy = 3;
 
-    mMap.insert(std::pair<std::string, VisualObject*>{"Parabel", new Parabel("Parabel", pAx, pAy,   pBx, pBy,   pCx, pCy,   pDx, pDy,   pEx, pEy,   pFx, pFy,   pGx, pGy)});
-
-    mMap.insert(std::pair<std::string, VisualObject*>{"NPC", new OctahedronBall("NPC", 2)});
-
-    Parabel* parabel = (Parabel*)mMap["Parabel"];
-    NPCX = 0;
-    NPCdirection = false;
-    mMap["NPC"]->setPosition(0, parabel->f(NPCX), 1);
+    mMap.insert(std::pair<std::string, VisualObject*>{"Parabel", new Parabel(pAx, pAy,   pBx, pBy,   pCx, pCy,   pDx, pDy,   pEx, pEy,   pFx, pFy,   pGx, pGy)});
 
 
     //Scene 1
-    mMap.insert(std::pair<std::string, VisualObject*>{"House", new House("House")});
+    mMap.insert(std::pair<std::string, VisualObject*>{"House", new House()});
     mMap["House"]->move(10.f, 0.f, 4);
     mMap["House"]->scale(5);
     mMap["House"]->rotate(270, QVector3D(0, 0, 1));
 
-    mMap.insert(std::pair<std::string, VisualObject*>{"Door", new Door("Door")});
-    mMap["Door"]->setPosition(5, 0.f, 2);
+    mGameObjects.insert(std::pair<std::string, GameObject*>{"Door", new Door()});
 
+    mGameObjects.insert(std::pair<std::string, GameObject*>{"Player", new Player()});
+    mCamera->setFollowGameObject(mGameObjects["Player"]);
+
+    for (int i = 0; i < 8; i++)
+    {
+        mGameObjects.insert(std::pair<std::string, GameObject*>{"PickUp" + std::to_string(i), new PickUp()});
+    }
 
     //Scene 2
-    mObjectMapScene2.insert(std::pair<std::string, VisualObject*>{"HouseInside", new Cube("HouseInside")});
+    mObjectMapScene2.insert(std::pair<std::string, VisualObject*>{"HouseInside", new Cube()});
     mObjectMapScene2["HouseInside"]->move(0, 0, 19);
     mObjectMapScene2["HouseInside"]->scale(20);
-
-    mObjectMapScene2.insert(std::pair<std::string, VisualObject*>{"PickUp8", new OctahedronBall("PickUp8", 6)});
-    mObjectMapScene2["PickUp8"]->move(0.f, 0.f, 1);
 
 
 
@@ -164,7 +148,7 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
 
     //Alternativ: bygger en scene - legger inn objekter
     //Erstatter std::vector<VisualObject*> med unordered map
-    mObjectMapScene2.insert(std::pair<std::string, VisualObject*>{"xyz", new XYZ("XYZ")});
+    mObjectMapScene2.insert(std::pair<std::string, VisualObject*>{"xyz", new XYZ()});
     //mMap.insert(std::pair<std::string, VisualObject*>{"triangleSurface", new TriangleSurface("Data.txt")});
     //mMap.insert(std::pair<std::string, VisualObject*> {"mia", mia});
     //std::pair<std::string, VisualObject*> par{"disc", mDisc};
@@ -183,6 +167,12 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     for (auto it = mObjectMapScene2.begin(); it != mObjectMapScene2.end(); it++)
     {
         (*it).second->setScene(2);
+    }
+
+    //Update all GameObjects to scene 1
+    for (auto it = mGameObjects.begin(); it != mGameObjects.end(); it++)
+    {
+        (*it).second->setScene(1);
     }
 }
 
@@ -275,19 +265,21 @@ void RenderWindow::init()
         (*it).second->init(mMatrixUniform);
     }
 
+    for (auto it = mGameObjects.begin(); it != mGameObjects.end(); it++)
+    {
+        (*it).second->awake();
+    }
+
     mCamera->init(mPmatrixUniform, mVmatrixUniform);
     mCamera->perspective(80, 1.6f, 0.1f, 1000);
 
     glBindVertexArray(0);       //unbinds any VertexArray - good practice
-
 }
 
 // Called each frame
 void RenderWindow::render()
 {
    mTimeStart.restart(); //restart FPS clock
-
-   moveNPC();
 
    input();
    mContext->makeCurrent(this);
@@ -303,23 +295,33 @@ void RenderWindow::render()
    //Camera
    mCamera->update();
 
-   if (activeScene == 1)
+   for (auto it = mObjects.begin(); it != mObjects.end(); it++)
    {
-       for (auto it = mObjects.begin(); it != mObjects.end(); it++)
+       if((*it)->getScene() == activeScene)
        {
            (*it)->draw();
        }
+   }
 
-       for (auto it = mMap.begin(); it != mMap.end(); it++)
+   for (auto it = mMap.begin(); it != mMap.end(); it++)
+   {
+       if((*it).second->getScene() == activeScene)
        {
            (*it).second->draw();
        }
    }
-   else if (activeScene == 2)
-   {
-       mMap["Player"]->draw();
 
-       for (auto it = mObjectMapScene2.begin(); it != mObjectMapScene2.end(); it++)
+   for (auto it = mGameObjects.begin(); it != mGameObjects.end(); it++)
+   {
+       if((*it).second->getScene() == activeScene)
+       {
+           (*it).second->update();
+       }
+   }
+
+   for (auto it = mObjectMapScene2.begin(); it != mObjectMapScene2.end(); it++)
+   {
+       if((*it).second->getScene() == activeScene)
        {
            (*it).second->draw();
        }
@@ -431,72 +433,38 @@ void RenderWindow::startOpenGLDebugger()
     }
 }
 
-void RenderWindow::moveNPC()
-{
-    if (NPCdirection)
-    {
-        NPCX += 0.1f;
-        if (NPCX > 3)
-        {
-            NPCdirection = false;
-        }
-    }
-    else
-    {
-        NPCX -= 0.1f;
-        if (NPCX < -3)
-        {
-            NPCdirection = true;
-        }
-    }
-
-    Parabel* parabel = (Parabel*)mMap["Parabel"];
-    mMap["NPC"]->setPosition(NPCX, parabel->f(NPCX), 1);
-}
-
 
 //-----
 
 
-std::vector<VisualObject *> RenderWindow::GetAllObjects()
+std::vector<GameObject *> RenderWindow::GetAllObjects()
 {
-    std::vector<VisualObject*> objects;
-    for (auto it = mObjects.begin(); it!= mObjects.end();it++)
+    std::vector<GameObject*> objects;
+    for (auto it = mGameObjects.begin(); it!= mGameObjects.end();it++)
     {
-        objects.push_back((*it));
+        objects.push_back((*it).second);
     }
 
-    for (auto it = mMap.begin(); it!= mMap.end();it++)
-    {
-        objects.push_back(it->second);
-    }
+//    for (auto it = mMap.begin(); it!= mMap.end();it++)
+//    {
+//        objects.push_back(it->second);
+//    }
+
     return objects;
 }
 
-std::vector<VisualObject *> RenderWindow::GetColliderObjects(int scene)
+std::vector<GameObject*> RenderWindow::GetColliderObjects(int scene)
 {
-    std::vector<VisualObject*> objects;
+    std::vector<GameObject*> objects;
 
-    if (scene == 1)
+    for (auto it = mGameObjects.begin(); it!= mGameObjects.end();it++)
     {
-        for (auto it = mObjects.begin(); it!= mObjects.end();it++)
+        if ((*it).second->CollissionActive())
         {
-            if ((*it)->CollissionActive())
-                objects.push_back((*it));
-        }
-
-        for (auto it = mMap.begin(); it!= mMap.end();it++)
-        {
-            if (it->second->CollissionActive())
-                objects.push_back(it->second);
-        }
-    }
-    else if (scene == 2)
-    {
-        for (auto it = mObjectMapScene2.begin(); it!= mObjectMapScene2.end();it++)
-        {
-            if (it->second->CollissionActive())
-                objects.push_back(it->second);
+            if(it->second->getScene() == scene)
+            {
+                objects.push_back((*it).second);
+            }
         }
     }
 
@@ -510,7 +478,7 @@ void RenderWindow::ChangeScene(int scene)
         mCamera->setPosition(QVector3D(10, 0, 10));
         mCamera->setForward(QVector3D(0, 0, 0));
 
-        mMap["Player"]->setScene(1);
+        mGameObjects["Player"]->setScene(1);
         activeScene = 1;
     }
     if (scene == 2)
@@ -518,9 +486,15 @@ void RenderWindow::ChangeScene(int scene)
         mCamera->setPosition(QVector3D(10, 0, 10));
         mCamera->setForward(QVector3D(0, 0, 0));
 
-        mMap["Player"]->setScene(2);
+        mGameObjects["Player"]->setScene(2);
         activeScene = 2;
     }
+}
+
+void RenderWindow::AddGameObject(GameObject *object, std::string name)
+{
+    mGameObjects.insert(std::pair<std::string, GameObject*> {name, object});
+    object->awake();
 }
 
 
@@ -561,85 +535,61 @@ void RenderWindow::mousePressEvent(QMouseEvent *event)
 
 void RenderWindow::input()
 {
-    //Move Objects
+    //Move Camera
     if (Keymap[Qt::Key_W] == true)
     {
-        mCamera->translate(10, 0, 0);
+        mCamera->translate(0.2f, 0, 0);
     }
     if (Keymap[Qt::Key_S] == true)
     {
-        mCamera->translate(-10, 0, 0);
+        mCamera->translate(-0.2f, 0, 0);
     }
     if (Keymap[Qt::Key_A] == true)
     {
-        mCamera->translate(0, 10, 0);
+        mCamera->translate(0, -0.2f, 0);
     }
     if (Keymap[Qt::Key_D] == true)
     {
-        mCamera->translate(0, -10, 0);
+        mCamera->translate(0, 0.2f, 0);
     }
 
     //Rotate Object
     if(Keymap[Qt::Key_Q] == true)
     {
-//        for (int var = 0; var < mObjects.size(); ++var)
-//        {
-//            mObjects[var]->rotate(5, 10, 0, 0);
-//        }
-
-        mCamera->translate(0, 0, -10);
+        mCamera->translate(0, 0, -0.2f);
     }
     if(Keymap[Qt::Key_E] == true)
     {
-//        for (int var = 0; var < mObjects.size(); ++var)
-//        {
-//            mObjects[var]->rotate(5, -10, 0, 0);
-//        }
-
-        mCamera->translate(0, 0, 10);
+        mCamera->translate(0, 0, 0.2f);
     }
     if(Keymap[Qt::Key_Z] == true)
     {
-        for (int var = 0; var < mObjects.size(); ++var)
-        {
-            mObjects[var]->rotate(5, 0, -10, 0);
-        }
+
     }
     if(Keymap[Qt::Key_X] == true)
     {
-        for (int var = 0; var < mObjects.size(); ++var)
-        {
-            mObjects[var]->rotate(5, 0, 10, 0);
-        }
+
     }
 
     //Move Map
     if (Keymap[Qt::Key_Up] == true)
     {
-        mMap["Player"]->move(0.1f, 0, 0);
     }
     if (Keymap[Qt::Key_Down] == true)
     {
-        mMap["Player"]->move(-0.1f, 0, 0);
     }
     if (Keymap[Qt::Key_Right] == true)
     {
-        //mMap["Player"]->move(0, -0.1f, 0);
-        mMap["Player"]->rotate(-5.f, QVector3D(0, 0, 1));
     }
     if (Keymap[Qt::Key_Left] == true)
     {
-        //mMap["Player"]->move(0, 0.1f, 0);
-        mMap["Player"]->rotate(5.f, QVector3D(0, 0, 1));
     }
 
     if (Keymap[Qt::Key_K] == true)
     {
-        mMap["Player"]->rotate(5.f, QVector3D(0, 0, 1));
     }
     if (Keymap[Qt::Key_L] == true)
     {
-        mMap["Player"]->rotate(-5.f, QVector3D(0, 0, 1));
     }
 
     //Scene swap
@@ -651,6 +601,11 @@ void RenderWindow::input()
     {
         ChangeScene(2);
     }
+}
+
+void RenderWindow::resizeEvent(QResizeEvent *)
+{
+    mCamera->perspective(80, width() / height(), 0.1f, 1000);
 }
 
 //Event sent from Qt when program receives a keyPress

@@ -1,32 +1,31 @@
 #ifndef DOOR_H
 #define DOOR_H
 
-#include "visualobject.h"
+#include "gameobject.h"
 
+class VisualObjectComponent;
 class SphereCollider;
 
-class Door : public VisualObject
+class Door : public GameObject
 {
 public:
-    Door(std::string name);
+    Door();
     ~Door() override;
 
-    void init(GLint matrixUniform) override;
-    void draw() override;
+    VisualObjectComponent* Mesh;
+    SphereCollider* Collider;
 
-    void collission(VisualObject* other) override;
-
-    SphereCollider* collider;
-
-
+    virtual void awake() override;
+    virtual void update() override;
+    void collission(GameObject* other) override;
 
 private:
-    bool doorAnim;
-    bool doorIsOpen;
-
-    QVector3D doorPos;
+    bool openDoor;
     QVector3D doorClosedPos;
     QVector3D doorOpenPos;
+
+    QVector3D pos;
+
 };
 
 #endif // DOOR_H

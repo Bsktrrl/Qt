@@ -1,10 +1,8 @@
 #include "tetraeder.h"
 #include "cmath"
 
-Tetraeder::Tetraeder(std::string name)
+Tetraeder::Tetraeder()
 {
-    setName(name);
-
     Position A = Position(0, 1, 0);
     Position B = Position(0, 0, 1/sqrt(3));
 
@@ -35,10 +33,8 @@ Tetraeder::Tetraeder(std::string name)
     mVertices.push_back(Vertex(A, Color(1, 0, 1)));
 }
 
-Tetraeder::Tetraeder(std::string name, Position pos, QVector3D scale)
+Tetraeder::Tetraeder(Position pos, QVector3D scale)
 {
-    setName(name);
-
     Position A = Position(0, 1, 0);
     Position B = Position(0, 0, 1/sqrt(3));
 
@@ -147,6 +143,16 @@ void Tetraeder::draw()
     glBindVertexArray( mVAO );
     glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
     glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
+}
+void Tetraeder::draw(QMatrix4x4& transformMatrix)
+{
+    if (isActive)
+    {
+        transformMatrix *= mMatrix;
+        glBindVertexArray( mVAO );
+        glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, transformMatrix.constData());
+        glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
+    }
 }
 
 QVector2D Tetraeder::rotatePoint(QVector2D point, float angle)

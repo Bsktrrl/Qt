@@ -22,12 +22,8 @@
 //! - 8 comes from the original number of triangles in a regular Octahedron
 //! - n is the recursion level (number of repeated subdivisions)
 //!
-OctahedronBall::OctahedronBall(std::string name, int n) : m_recursions(n), m_indeks(0), VisualObject()
+OctahedronBall::OctahedronBall(int n) : m_recursions(n), m_indeks(0), VisualObject()
 {
-    setName(name);
-
-    collider = new SphereCollider(this, 1);
-
     mVertices.reserve(3 * 8 * pow(4, m_recursions));
     oktaederUnitBall();
 }
@@ -176,14 +172,18 @@ void OctahedronBall::draw()
     if (!isActive)
           return;
 
-    collider->OnUpdate();
-
     glBindVertexArray( mVAO );
     glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
     glDrawArrays(GL_TRIANGLES, 0, mVertices.size());//mVertices.size());
 }
 
-void OctahedronBall::collission(VisualObject *other)
+void OctahedronBall::draw(QMatrix4x4& transformMatrix)
 {
-    this->setActive(false);
+    if (isActive)
+    {
+        transformMatrix *= mMatrix;
+        glBindVertexArray( mVAO );
+        glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, transformMatrix.constData());
+        glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
+    }
 }
