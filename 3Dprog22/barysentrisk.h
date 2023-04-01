@@ -11,16 +11,13 @@ class barysentrisk
 public:
     barysentrisk();
 
-    float w_1(Vertex vA, Vertex vB, Vertex vC, QVector3D p);
-    float w_2(Vertex vA, Vertex vB, Vertex vC, QVector3D p, float w1);
+    float T_ABC(Vertex vA, Vertex vB, Vertex vC);
 
-    bool isOnTriangle(float w1, float w2);
+    float T_ABX(Vertex vA, Vertex vB, QVector3D x, float t_abc);
+    float T_BCX(Vertex vB, Vertex vC, QVector3D x, float t_abc);
+    float T_CAX(Vertex vC, Vertex vA, QVector3D x, float t_abc);
 
-    float triangleHeight(GameObject* playerPos, VisualObject* landscape);
-
-    QVector3D setPlayerPosition();
-
-    QVector3D baryCoords(Vertex a, Vertex b, Vertex c, QVector3D p);
+    float bary(GameObject* playerPos, VisualObject* landscape);
 };
 
 #endif // BARYSENTRISK_H

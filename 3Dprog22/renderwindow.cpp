@@ -683,9 +683,20 @@ void RenderWindow::mousePressEvent(QMouseEvent *event)
 
 void RenderWindow::input()
 {
+    QVector3D oldPlayerPos = mGameObjects["Player"]->getPosition3D();
+    float baryc = bary->bary(mGameObjects["Player"], mPhongObjects["Landscape"]);
+
+    //mCamera->setPosition(QVector3D(oldPlayerPos.x(), oldPlayerPos.y(), baryc));
+    mGameObjects["Player"]->setPosition(QVector3D(oldPlayerPos.x(), oldPlayerPos.y(), baryc));
 
 
-    mCamera->setPosition(QVector3D(mGameObjects["Player"]->getPosition3D().x(), mGameObjects["Player"]->getPosition3D().y(), bary->triangleHeight(mGameObjects["Player"], mPhongObjects["Landscape"])));
+
+    //Logger
+    mLogger->logText("Triangle height: " + std::to_string(baryc));
+    mLogger->logText("PlayerPos: x" + std::to_string(mGameObjects["Player"]->getPosition3D().x()) + " | y:" + std::to_string(mGameObjects["Player"]->getPosition3D().y()) + " | z:" + std::to_string(mGameObjects["Player"]->getPosition3D().z()));
+    mLogger->logText("----------------------------");
+    mLogger->logText("");
+
 
 
     //Move Camera
@@ -756,8 +767,6 @@ void RenderWindow::input()
     {
         ChangeScene(2);
     }
-
-    mLogger->logText("Triangle height: " + std::to_string(bary->triangleHeight(mGameObjects["Player"], mPhongObjects["Landscape"])));
 }
 
 void RenderWindow::resizeEvent(QResizeEvent *)

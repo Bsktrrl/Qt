@@ -6,47 +6,85 @@ barysentrisk::barysentrisk()
 
 }
 
-float barysentrisk::w_1(Vertex vA, Vertex vB, Vertex vC, QVector3D p)
+float barysentrisk::T_ABC(Vertex vA, Vertex vB, Vertex vC)
 {
-    float w1 = ( (vA.GetX() * (vC.GetY() - vA.GetY())) + ((p.y() - vA.GetY()) * (vC.GetX() - vA.GetX())) - (p.x() * (vC.GetY() - vA.GetY())) ) /
-            ( ((vB.GetY() - vA.GetY()) * (vC.GetX() - vA.GetX()))  -  ((vB.GetX() - vA.GetX()) * (vC.GetY() - vA.GetY())) );
+    //Hele trekanten
+    QVector3D AB = QVector3D(vB.GetX() - vA.GetX(), vB.GetY() - vA.GetY(), vB.GetZ() - vA.GetZ());
+    QVector3D AC = QVector3D(vC.GetX() - vA.GetX(), vC.GetY() - vA.GetY(), vC.GetZ() - vA.GetZ());
 
-    return w1;
+    float t_abc = (AB.x() * AC.y()) + (AB.y() * AC.x());
+
+    return t_abc;
 }
 
-float barysentrisk::w_2(Vertex vA, Vertex vB, Vertex vC, QVector3D p, float w1)
+float barysentrisk::T_ABX(Vertex vA, Vertex vB, QVector3D x, float t_abc)
 {
-    float w2 = ( p.y() - vA.GetY() - (w1 * ((vB.GetY() - vA.GetY()))) ) / (vC.GetY() - vA.GetY());
+    //Trekant ABX
+    QVector3D AB = QVector3D(vB.GetX() - vA.GetX(), vB.GetY() - vA.GetY(), vB.GetZ() - vA.GetZ());
+    QVector3D AX = QVector3D(x.x() - vA.GetX(),     x.y() - vA.GetY(),     x.z() - vA.GetZ());
 
-    return w2;
+    float u = (AB.x() * AX.y()) + (AB.y() * AX.x());
+
+    return u / t_abc;
 }
 
-bool barysentrisk::isOnTriangle(float w1, float w2)
+float barysentrisk::T_BCX(Vertex vB, Vertex vC, QVector3D x, float t_abc)
 {
-    if ((w1 >= 0 && (w1 + w2) <= 1)  ||  (w2 >= 0 && (w1 + w2) <= 1))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    //Trekant BCX
+    QVector3D BC = QVector3D(vC.GetX() - vB.GetX(), vC.GetY() - vB.GetY(), vC.GetZ() - vB.GetZ());
+    QVector3D BX = QVector3D(x.x() - vB.GetX(),     x.y() - vB.GetY(),     x.z() - vB.GetZ());
+
+    float v = (BC.x() * BX.y()) + (BC.y() * BX.x());
+
+    return v / t_abc;
 }
 
-float barysentrisk::triangleHeight(GameObject* playerPos, VisualObject* landscape)
+float barysentrisk::T_CAX(Vertex vC, Vertex vA, QVector3D x, float t_abc)
 {
-    //Logger::getInstance()->logText("PlayerPos: " + std::to_string(playerPos->getPosition3D().x()) + " | " + std::to_string(playerPos->getPosition3D().y()) + " | " + std::to_string(playerPos->getPosition3D().z()));
+    //Trekant CAX
+    QVector3D CA = QVector3D(vA.GetX() - vC.GetX(), vA.GetY() - vC.GetY(), vA.GetZ() - vC.GetZ());
+    QVector3D CX = QVector3D(x.x() - vC.GetX(),     x.y() - vC.GetY(),     x.z() - vC.GetZ());
 
+    float w = (CA.x() * CX.y()) + (CA.y() * CX.x());
+
+    return w / t_abc;
+}
+
+float barysentrisk::bary(GameObject* playerPos, VisualObject* landscape)
+{
     for (int i = 0; i < landscape->getmVerticesSize() - 2; i++)
     {
-        float w1 = w_1(landscape->getVertex(i), landscape->getVertex(i + 1), landscape->getVertex(i + 2), playerPos->getPosition3D());
-        float w2 = w_2(landscape->getVertex(i), landscape->getVertex(i + 1), landscape->getVertex(i + 2), playerPos->getPosition3D(), w1);
+        float t_abc = T_ABC(landscape->getVertex(i), landscape->getVertex(i + 1), landscape->getVertex(i + 2));
 
-        if (isOnTriangle(w1, w2))
+        float u = T_ABX(landscape->getVertex(i),     landscape->getVertex(i + 1), playerPos->getPosition3D(), t_abc);
+        float v = T_BCX(landscape->getVertex(i + 1), landscape->getVertex(i + 2), playerPos->getPosition3D(), t_abc);
+        float w = T_CAX(landscape->getVertex(i + 2), landscape->getVertex(i),     playerPos->getPosition3D(), t_abc);
+
+        if (u < 0)
         {
-            Logger::getInstance()->logText("w1: " + std::to_string(w1) + " | w2: " + std::to_string(w2) + " | Vertex no " + std::to_string(i) + ": " + std::to_string(landscape->getVertex(i).GetZ()));
 
-            return landscape->getVertex(i).GetZ();
+        }
+        else if (v < 0)
+        {
+
+        }
+        else if (w < 0)
+        {
+
+        }
+        else if ((u + v) > 1)
+        {
+
+        }
+        else
+        {
+            //Logger::getInstance()->logText("playerPos: x:" + std::to_string(playerPos->getPosition3D().x()) + " | y:" + std::to_string(playerPos->getPosition3D().y()) + " | z:" + std::to_string(playerPos->getPosition3D().z()));
+            Logger::getInstance()->logText("u: " + std::to_string(u) + " | v: " + std::to_string(v)+ " | w: " + std::to_string(w));
+
+            Logger::getInstance()->logText("u + v + w = " + std::to_string((u + v + w)));
+            Logger::getInstance()->logText("Vertex no: " + std::to_string(i));
+
+            return (landscape->getVertex(i).GetZ() + 1);
         }
     }
 }
