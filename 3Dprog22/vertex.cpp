@@ -35,6 +35,18 @@ Vertex::Vertex(Position position, Color color)
     mUV = UV();
 }
 
+Vertex::Vertex(QVector3D position, QVector3D normal)
+    :  mPosition(Position(position.x(), position.y(), position.z())), mColor(Color(normal.x(), normal.y(), normal.z())), mUV(UV())
+{
+
+}
+
+Vertex::Vertex(QVector3D position, QVector3D normal, UV uv)
+    :  mPosition(Position(position.x(), position.y(), position.z())), mColor(Color(normal.x(), normal.y(), normal.z())), mUV(uv)
+{
+
+}
+
 
 
 std::ostream& operator<< (std::ostream& os, const Vertex& v) {

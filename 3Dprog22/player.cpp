@@ -29,9 +29,11 @@ void Player::awake()
 void Player::update()
 {
     GameObject::update();
+
+    QVector3D posNow = getPosition3D();
 }
 
 void Player::collission(GameObject *other)
 {
-    Logger::getInstance()->logText("PlayerDColliding");
+    //Logger::getInstance()->logText("PlayerDColliding");
 }

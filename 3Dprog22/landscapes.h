@@ -20,6 +20,7 @@ public:
     static float f(float x, float y);
     Color recalc(float z);
 
+    int height;
 
 };
 

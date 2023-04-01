@@ -3,6 +3,8 @@
 
 #include <QOpenGLFunctions_4_1_Core>
 
+class Uniforms;
+
 //#include "GL/glew.h" //We use QOpenGLFunctions instead, so no need for Glew (or GLAD)!
 
 //This class is pretty much a copy of the shader class at
@@ -22,9 +24,18 @@ public:
     ///Returns the program number for this shader
     GLuint getProgram() const;
 
+    void setUniform(Uniforms* uni) { uniform = uni; }
+    Uniforms* getUniform() { return uniform; }
+
+    void UploadObjectColor(QVector3D color);
+    void UploadLightColor(QVector3D color);
+    void UploadLightPos(QVector3D color);
+
 private:
     ///The int OpenGL gives as a reference to this shader
     GLuint mProgram;
+
+    Uniforms* uniform;
 
     ///The logger - Output Log in the application
     class Logger *mLogger{nullptr};

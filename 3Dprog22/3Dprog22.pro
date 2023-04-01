@@ -6,6 +6,7 @@ CONFIG      += c++17
 TARGET      = 3D-programmering
 
 SOURCES += main.cpp \
+    barysentrisk.cpp \
     camera.cpp \
     collider.cpp \
     component.cpp \
@@ -17,6 +18,7 @@ SOURCES += main.cpp \
     house.cpp \
     interpolation.cpp \
     landscapes.cpp \
+    light.cpp \
     logger.cpp \
     mainwindow.cpp \
     octahedronball.cpp \
@@ -30,8 +32,11 @@ SOURCES += main.cpp \
     shader.cpp \
     spherecollider.cpp \
     tetraeder.cpp \
+    texture.cpp \
     transform.cpp \
     trianglesurface.cpp \
+    uniforms.cpp \
+    vec.cpp \
     vertex.cpp \
     visualobject.cpp \
     visualobjectcomponent.cpp \
@@ -39,6 +44,7 @@ SOURCES += main.cpp \
 
 HEADERS += \
     Math.h \
+    barysentrisk.h \
     camera.h \
     collider.h \
     component.h \
@@ -50,6 +56,7 @@ HEADERS += \
     house.h \
     interpolation.h \
     landscapes.h \
+    light.h \
     logger.h \
     mainwindow.h \
     octahedronball.h \
@@ -62,9 +69,13 @@ HEADERS += \
     renderwindow.h \
     shader.h \
     spherecollider.h \
+    stb_image.h \
     tetraeder.h \
+    texture.h \
     transform.h \
     trianglesurface.h \
+    uniforms.h \
+    vec.h \
     vertex.h \
     visualobject.h \
     visualobjectcomponent.h \
@@ -74,5 +85,9 @@ FORMS += \
     mainwindow.ui
 
 DISTFILES += \
+    PhongShader.frag \
+    PhongShader.vert \
     plainshader.frag \
-    plainshader.vert
+    plainshader.vert \
+    textureshader.frag \
+    textureshader.vert

@@ -3,6 +3,9 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <QVector3D>
+
+#include "uniforms.h"
 
 //#include "GL/glew.h" - using QOpenGLFunctions instead
 
@@ -107,4 +110,22 @@ void Shader::use()
 GLuint Shader::getProgram() const
 {
     return mProgram;
+}
+
+void Shader::UploadObjectColor(QVector3D color)
+{
+    glUniform3f(uniform->mObjectColor, color.x(),color.y(),color.z());
+}
+
+void Shader::UploadLightColor(QVector3D color)
+{
+
+    glUniform3f(uniform->mLightColor, color.x(),color.y(),color.z());
+}
+
+void Shader::UploadLightPos(QVector3D lightPos)
+{
+    glUniform3f(uniform->mLightPosition, lightPos.x(),lightPos.y(),lightPos.z());
+
+    //Logger::getInstance()->logText("lightPos - Shader: " + std::to_string(lightPos.x()) + " " + std::to_string(lightPos.y()) + " " + std::to_string(lightPos.z()));
 }

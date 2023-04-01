@@ -30,6 +30,10 @@
 #include "player.h"
 #include "transform.h"
 #include "pickup.h"
+#include "light.h"
+
+#include "uniforms.h"
+#include "barysentrisk.h"
 
 RenderWindow* RenderWindow::instance;
 
@@ -80,7 +84,7 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     //Make The Window appear
     mObjects.push_back(new XYZ());
 
-    mMap.insert(std::pair<std::string, VisualObject*>{"Landscape", new Landscape(QVector2D(-10, -10), QVector2D(10, 10))});
+
 
     mMap.insert(std::pair<std::string, VisualObject*>{"PickUp1", new OctahedronBall(0)});
     mMap["PickUp1"]->move(4.f, 0.f, 0.f);
@@ -97,10 +101,18 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
 
 
     //Scene 1
-    mMap.insert(std::pair<std::string, VisualObject*>{"House", new House()});
-    mMap["House"]->move(10.f, 0.f, 4);
-    mMap["House"]->scale(5);
-    mMap["House"]->rotate(270, QVector3D(0, 0, 1));
+    mPhongObjects.insert(std::pair<std::string, VisualObject*>{"House", new House()});
+    mPhongObjects["House"]->move(10.f, 0.f, 4);
+    mPhongObjects["House"]->scale(5);
+    mPhongObjects["House"]->rotate(270, QVector3D(0, 0, 1));
+
+    //Light to scene 1
+    mPhongObjects.insert(std::pair<std::string, VisualObject*>{"Light", new Cube()});
+    mPhongObjects["Light"]->move(0.f, 0.f, 4.f);
+
+
+    mPhongObjects.insert(std::pair<std::string, VisualObject*>{"Landscape", new Landscape(QVector2D(-10, -10), QVector2D(10, 10))});
+
 
     mGameObjects.insert(std::pair<std::string, GameObject*>{"Door", new Door()});
 
@@ -116,7 +128,6 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     mObjectMapScene2.insert(std::pair<std::string, VisualObject*>{"HouseInside", new Cube()});
     mObjectMapScene2["HouseInside"]->move(0, 0, 19);
     mObjectMapScene2["HouseInside"]->scale(20);
-
 
 
     //mObjects.push_back(new Tetraeder(Position(2.2f, 0, 0), QVector3D(2, 2, 2)));
@@ -149,6 +160,10 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     //Alternativ: bygger en scene - legger inn objekter
     //Erstatter std::vector<VisualObject*> med unordered map
     mObjectMapScene2.insert(std::pair<std::string, VisualObject*>{"xyz", new XYZ()});
+
+    textureObjects.push_back(new TriangleSurface());
+    textureObjects[0]->scale(QVector3D(100, 100, 0));
+
     //mMap.insert(std::pair<std::string, VisualObject*>{"triangleSurface", new TriangleSurface("Data.txt")});
     //mMap.insert(std::pair<std::string, VisualObject*> {"mia", mia});
     //std::pair<std::string, VisualObject*> par{"disc", mDisc};
@@ -163,6 +178,10 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     {
         (*it).second->setScene(1);
     }
+    for (auto it = mPhongObjects.begin(); it != mPhongObjects.end(); it++)
+    {
+        (*it).second->setScene(1);
+    }
 
     for (auto it = mObjectMapScene2.begin(); it != mObjectMapScene2.end(); it++)
     {
@@ -173,6 +192,11 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     for (auto it = mGameObjects.begin(); it != mGameObjects.end(); it++)
     {
         (*it).second->setScene(1);
+    }
+
+    for (auto it = textureObjects.begin(); it != textureObjects.end(); it++)
+    {
+        (*it)->setScene(1);
     }
 }
 
@@ -240,29 +264,77 @@ void RenderWindow::init()
     //NB: hardcoded path to files! You have to change this if you change directories for the project.
     //Qt makes a build-folder besides the project folder. That is why we go down one directory
     // (out of the build-folder) and then up into the project folder.
+
+    //mShaderProgram[0] = new Shader("../3Dprog22/plainshader.vert", "../3Dprog22/plainshader.frag");
+    //mLogger->logText("Plain shader program id: " + std::to_string(mShaderProgram[0]->getProgram()) );
+
+    //mShaderProgram[1]= new Shader("../3Dprog22/textureshader.vert", "../3Dprog22/textureshader.frag");
+    //mLogger->logText("Texture shader program id: " + std::to_string(mShaderProgram[1]->getProgram()) );
+
+    //mShaderProgram[2]= new Shader("../3Dprog22/phongshader.vert", "../3Dprog22/phongshader.frag");
+    //mLogger->logText("Texture shader program id: " + std::to_string(mShaderProgram[2]->getProgram()) );
+
+    //setupPlainShader(0);
+    //setupTextureShader(1);
+    //setupPhongShader(2);
+
     mShaderProgram = new Shader("../3Dprog22/plainshader.vert", "../3Dprog22/plainshader.frag");
+    shaders.insert(std::pair<std::string, Shader*>{"PlainShader", mShaderProgram});
+
+    Uniforms* plainUniform = new Uniforms(glGetUniformLocation(shaders["PlainShader"]->getProgram(), "matrix"),
+                                          glGetUniformLocation(shaders["PlainShader"]->getProgram(), "vmatrix"),
+                                          glGetUniformLocation(shaders["PlainShader"]->getProgram(), "pmatrix"));
+    shaders["PlainShader"]->setUniform(plainUniform);
+
+
+    //-----
+
+
+    Shader* shader1 = new Shader("../3Dprog22/textureshader.vert", "../3Dprog22/textureshader.frag");
+    shaders.insert(std::pair<std::string, Shader*>{"TextureShader", shader1});
+
+    Uniforms* textureUniform = new Uniforms(glGetUniformLocation(shaders["TextureShader"]->getProgram(), "matrix"),
+                                            glGetUniformLocation(shaders["TextureShader"]->getProgram(), "vmatrix"),
+                                            glGetUniformLocation(shaders["TextureShader"]->getProgram(), "pmatrix"),
+                                            glGetUniformLocation(shaders["TextureShader"]->getProgram(), "textureSampler"));
+    shaders["TextureShader"]->setUniform(textureUniform);
+
+
+    //-----
+
+
+    Shader* PhongShader = new Shader("../3Dprog22/PhongShader.vert", "../3Dprog22/PhongShader.frag");
+    shaders.insert(std::pair<std::string, Shader*>{"PhongShader", PhongShader});
+
+    Uniforms* phongUniform = new Uniforms(glGetUniformLocation(shaders["PhongShader"]->getProgram(), "mMatrix"),
+                                            glGetUniformLocation(shaders["PhongShader"]->getProgram(), "vMatrix"),
+                                            glGetUniformLocation(shaders["PhongShader"]->getProgram(), "pMatrix"));
+
+    phongUniform->mObjectColor = glGetUniformLocation(shaders["PhongShader"]->getProgram(), "Color");
+    phongUniform->mViewPosition = glGetUniformLocation(shaders["PhongShader"]->getProgram(), "viewPos");
+    phongUniform->mLightPosition = glGetUniformLocation(shaders["PhongShader"]->getProgram(), "lightPosition");
+
+    shaders["PhongShader"]->setUniform(phongUniform);
 
     // Get the matrixUniform location from the shader
     // This has to match the "matrix" variable name in the vertex shader
     // The uniform is used in the render() function to send the model matrix to the shader
-    mMatrixUniform = glGetUniformLocation( mShaderProgram->getProgram(), "matrix" );
-    mPmatrixUniform = glGetUniformLocation( mShaderProgram->getProgram(), "pmatrix" );
-    mVmatrixUniform = glGetUniformLocation( mShaderProgram->getProgram(), "vmatrix" );
     //mCamera.init(mMatrixUniform, mVmatrixUniform);
 
+    glUseProgram(shaders["PlainShader"]->getProgram());
     for (auto it = mObjects.begin(); it != mObjects.end(); it++)
     {
-        (*it)->init(mMatrixUniform);
+        (*it)->init(shaders["PlainShader"]->getUniform()->mMmatrixUniform);
     }
 
     for (auto it = mMap.begin(); it != mMap.end(); it++)
     {
-        (*it).second->init(mMatrixUniform);
+        (*it).second->init(shaders["PlainShader"]->getUniform()->mMmatrixUniform);
     }
 
     for (auto it = mObjectMapScene2.begin(); it != mObjectMapScene2.end(); it++)
     {
-        (*it).second->init(mMatrixUniform);
+        (*it).second->init(shaders["PlainShader"]->getUniform()->mMmatrixUniform);
     }
 
     for (auto it = mGameObjects.begin(); it != mGameObjects.end(); it++)
@@ -270,7 +342,19 @@ void RenderWindow::init()
         (*it).second->awake();
     }
 
-    mCamera->init(mPmatrixUniform, mVmatrixUniform);
+    glUseProgram(shaders["TextureShader"]->getProgram());
+    for (auto it = textureObjects.begin(); it != textureObjects.end(); it++)
+    {
+        (*it)->init(shaders["TextureShader"]->getUniform()->mMmatrixUniform);
+    }
+
+    glUseProgram(shaders["PhongShader"]->getProgram());
+    for (auto it = mPhongObjects.begin(); it != mPhongObjects.end(); it++)
+    {
+        (*it).second->init(shaders["PhongShader"]->getUniform()->mMmatrixUniform);
+    }
+
+    mCamera->init(shaders["TextureShader"]->getUniform()->mPmatrixUniform, shaders["TextureShader"]->getUniform()->mVmatrixUniform);
     mCamera->perspective(80, 1.6f, 0.1f, 1000);
 
     glBindVertexArray(0);       //unbinds any VertexArray - good practice
@@ -281,6 +365,15 @@ void RenderWindow::render()
 {
    mTimeStart.restart(); //restart FPS clock
 
+   for (auto it = shaders.begin(); it != shaders.end(); it++)
+   {
+       glUseProgram(it->second->getProgram());
+
+       Uniforms* uni = it->second->getUniform();
+       mCamera->bind(uni->mPmatrixUniform, uni->mVmatrixUniform);
+       mCamera->uploadPos(uni->mViewPosition);
+   }
+
    input();
    mContext->makeCurrent(this);
 
@@ -290,7 +383,7 @@ void RenderWindow::render()
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
    //What shader to use
-   glUseProgram(mShaderProgram->getProgram());
+   glUseProgram(shaders["PlainShader"]->getProgram());
 
    //Camera
    mCamera->update();
@@ -311,14 +404,6 @@ void RenderWindow::render()
        }
    }
 
-   for (auto it = mGameObjects.begin(); it != mGameObjects.end(); it++)
-   {
-       if((*it).second->getScene() == activeScene)
-       {
-           (*it).second->update();
-       }
-   }
-
    for (auto it = mObjectMapScene2.begin(); it != mObjectMapScene2.end(); it++)
    {
        if((*it).second->getScene() == activeScene)
@@ -327,9 +412,67 @@ void RenderWindow::render()
        }
    }
 
+
+   //-----
+
+   glUseProgram(shaders["PhongShader"]->getProgram());
+
+   if (mGameObjects["Player"] != nullptr)
+   {
+       //bary->triangleHeight(mGameObjects["Player"], mPhongObjects["Landscape"]);
+
+       QVector3D lightPos = mGameObjects["Player"]->getPosition3D();
+
+       shaders["PhongShader"]->UploadLightPos(lightPos);
+
+       //mLogger->logText("lightPos: " + std::to_string(lightPos.x()) + " " + std::to_string(lightPos.y()) + " " + std::to_string(lightPos.z()));
+   }
+
+
+   for (auto it = mPhongObjects.begin(); it != mPhongObjects.end(); it++)
+   {
+       if ((*it).second != nullptr)
+       {
+           if((*it).second->getScene() == activeScene)
+           {
+               QVector3D objectColor = (*it).second->getObjectColor();
+
+               shaders["PhongShader"]->UploadObjectColor(objectColor);
+               (*it).second->draw();
+           }
+       }
+   }
+
+
+   //-----
+
+
+   glUseProgram(shaders["TextureShader"]->getProgram());
+   for (auto it = textureObjects.begin(); it != textureObjects.end(); it++)
+   {
+       if((*it)->getScene() == activeScene)
+       {
+           (*it)->draw(shaders["TextureShader"]->getUniform()->mMmatrixUniform);
+       }
+   }
+
+
+
+   //-----
+
+
+   for (auto it = mGameObjects.begin(); it != mGameObjects.end(); it++)
+   {
+       if((*it).second->getScene() == activeScene)
+       {
+           (*it).second->update();
+       }
+   }
+
    calculateFramerate();
    mContext->swapBuffers(this);
 }
+
 
 void RenderWindow::exposeEvent(QExposeEvent *)
 {
@@ -497,6 +640,11 @@ void RenderWindow::AddGameObject(GameObject *object, std::string name)
     object->awake();
 }
 
+void RenderWindow::runProgram(std::string shader)
+{
+    glUseProgram(shaders[shader]->getProgram());
+}
+
 
 //-----
 
@@ -535,6 +683,11 @@ void RenderWindow::mousePressEvent(QMouseEvent *event)
 
 void RenderWindow::input()
 {
+
+
+    mCamera->setPosition(QVector3D(mGameObjects["Player"]->getPosition3D().x(), mGameObjects["Player"]->getPosition3D().y(), bary->triangleHeight(mGameObjects["Player"], mPhongObjects["Landscape"])));
+
+
     //Move Camera
     if (Keymap[Qt::Key_W] == true)
     {
@@ -556,11 +709,13 @@ void RenderWindow::input()
     //Rotate Object
     if(Keymap[Qt::Key_Q] == true)
     {
-        mCamera->translate(0, 0, -0.2f);
+        //mCamera->translate(0, 0, -0.2f);
+        mCamera->translate(0, 0, 0);
     }
     if(Keymap[Qt::Key_E] == true)
     {
-        mCamera->translate(0, 0, 0.2f);
+        //mCamera->translate(0, 0, 0.2f);
+        mCamera->translate(0, 0, 0);
     }
     if(Keymap[Qt::Key_Z] == true)
     {
@@ -601,6 +756,8 @@ void RenderWindow::input()
     {
         ChangeScene(2);
     }
+
+    mLogger->logText("Triangle height: " + std::to_string(bary->triangleHeight(mGameObjects["Player"], mPhongObjects["Landscape"])));
 }
 
 void RenderWindow::resizeEvent(QResizeEvent *)

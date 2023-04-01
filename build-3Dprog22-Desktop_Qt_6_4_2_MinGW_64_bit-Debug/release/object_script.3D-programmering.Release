@@ -1,4 +1,5 @@
 release/main.o
+release/barysentrisk.o
 release/camera.o
 release/collider.o
 release/component.o
@@ -10,6 +11,7 @@ release/gameobject.o
 release/house.o
 release/interpolation.o
 release/landscapes.o
+release/light.o
 release/logger.o
 release/mainwindow.o
 release/octahedronball.o
@@ -23,8 +25,11 @@ release/renderwindow.o
 release/shader.o
 release/spherecollider.o
 release/tetraeder.o
+release/texture.o
 release/transform.o
 release/trianglesurface.o
+release/uniforms.o
+release/vec.o
 release/vertex.o
 release/visualobject.o
 release/visualobjectcomponent.o

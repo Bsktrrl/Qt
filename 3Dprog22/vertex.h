@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include "Math.h"
+#include <QVector3D>
 
 class Vertex {
    //! Overloaded ostream operator which writes all vertex data on an open textfile stream
@@ -21,6 +22,8 @@ public:
    Vertex(Position position, Normal color, UV uv);
    Vertex(Position position, Color color);
    Vertex(Position position, Normal color);
+   Vertex(QVector3D position, QVector3D normal);
+   Vertex(QVector3D position, QVector3D normal, UV uv);
 
    //Get Full
    Position GetPosition() { return mPosition; }
@@ -59,6 +62,13 @@ public:
 
    void SetU(float u) { mUV.u = u; }
    void SetV(float v) { mUV.v = v; }
+
+   void SetNormal(QVector3D normal)
+   {
+       mColor = Color(normal.x(), normal.y(), normal.z());
+   }
+
+   QVector3D GetNormal() { return QVector3D(mColor.r, mColor.g, mColor.b); }
 
 private:
    Position mPosition;

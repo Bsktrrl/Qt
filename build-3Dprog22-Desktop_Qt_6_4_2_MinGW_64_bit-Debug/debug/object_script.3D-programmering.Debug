@@ -1,4 +1,5 @@
 debug/main.o
+debug/barysentrisk.o
 debug/camera.o
 debug/collider.o
 debug/component.o
@@ -10,6 +11,7 @@ debug/gameobject.o
 debug/house.o
 debug/interpolation.o
 debug/landscapes.o
+debug/light.o
 debug/logger.o
 debug/mainwindow.o
 debug/octahedronball.o
@@ -23,8 +25,11 @@ debug/renderwindow.o
 debug/shader.o
 debug/spherecollider.o
 debug/tetraeder.o
+debug/texture.o
 debug/transform.o
 debug/trianglesurface.o
+debug/uniforms.o
+debug/vec.o
 debug/vertex.o
 debug/visualobject.o
 debug/visualobjectcomponent.o

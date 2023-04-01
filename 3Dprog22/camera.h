@@ -22,6 +22,7 @@ public:
    void setPosition(QVector3D position);
    void setForward(QVector3D at);
 
+   void bind(GLint pMatrixUniform, GLint vMatrixUniform);
 
    QVector3D GetForwardVector3D() { return mForward; }
    QVector3D GetForwardVector() { return QVector3D(mForward.x(), mForward.y(), mForward.z());}
@@ -30,6 +31,8 @@ public:
    QVector3D GetPosition() { return QVector3D(mPosition.x(), mPosition.y(), mPosition.z()); }
 
    void setFollowGameObject(GameObject* _follow) { follow = _follow; }
+
+   void uploadPos(GLint uniform);
 
 private:
    GLint  mPmatrixUniform;        //OpenGL reference to the Uniform in the shader program

@@ -49,7 +49,6 @@ void Camera::update()
     initializeOpenGLFunctions();
     glUniformMatrix4fv(mPmatrixUniform, 1, GL_FALSE, mPmatrix.constData());
     glUniformMatrix4fv(mVmatrixUniform, 1, GL_FALSE, mVmatrix.constData());
-
 }
 
 void Camera::translate(float dx, float dy, float dz)
@@ -127,4 +126,16 @@ void Camera::setForward(QVector3D at)
     mForward = (at - mPosition).normalized();
     mRight = QVector3D::crossProduct(mUp,mForward).normalized();
     lookAt(mPosition, mPosition + mForward, mUp);
+}
+
+void Camera::bind(GLint pMatrixUniform, GLint vMatrixUniform)
+{
+    initializeOpenGLFunctions();
+    glUniformMatrix4fv(pMatrixUniform, 1, GL_FALSE, mPmatrix.constData());
+    glUniformMatrix4fv(vMatrixUniform, 1, GL_FALSE, mVmatrix.constData());
+}
+
+void Camera::uploadPos(GLint uniform)
+{
+    glUniform3f(uniform, GetPosition3D().x(),GetPosition3D().y(),GetPosition3D().z());
 }

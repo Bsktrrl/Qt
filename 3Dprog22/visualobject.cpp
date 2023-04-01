@@ -2,6 +2,9 @@
 
 VisualObject::VisualObject()
 {
+    //Set Default color of object
+    objectColor = QVector3D(0.5f, 1.0f, 0.31f);
+
     mMatrix.setToIdentity();
     isActive = true;
 }

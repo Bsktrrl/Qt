@@ -18,6 +18,7 @@ public:
     virtual void collission(GameObject* other);
 
     VisualObjectComponent* Mesh;
+    VisualObjectComponent* TextureMesh;
     SphereCollider* collider;
 };
 

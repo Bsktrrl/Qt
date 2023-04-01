@@ -12,7 +12,7 @@ typedef int GLint;
 class VisualObjectComponent : public Component
 {
 public:
-    VisualObjectComponent(VisualObject* object, GameObject* owner);
+    VisualObjectComponent(VisualObject* object, GameObject* owner, std::string shader = "PlainShader");
     virtual ~VisualObjectComponent() override;
 
     void awake() override;
@@ -28,6 +28,8 @@ private:
 
 private:
     VisualObject* mObject;
+    std::string shaderName;
+    bool isUsingTexture;
 };
 
 #endif // VISUALOBJECTCOMPONENT_H

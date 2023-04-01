@@ -3,69 +3,70 @@
 House::House() : VisualObject()
 {
     // -y veggen - Door
-    mVertices.push_back(Vertex{-1,    -1, -1,    1, 0, 0});
-    mVertices.push_back(Vertex{-0.3f, -1, -1,    1, 0, 0});
-    mVertices.push_back(Vertex{-0.3f, -1,  0.3f, 1, 0, 0});
+    mVertices.push_back(Vertex{-1   ,-1,-1   ,1, 0, 0});
+    mVertices.push_back(Vertex{-0.3f,-1,-1   ,1, 0, 0});
+    mVertices.push_back(Vertex{-0.3f,-1, 0.3f,1, 0, 0});
 
-    mVertices.push_back(Vertex{-1,    -1, -1,    1, 0, 0});
-    mVertices.push_back(Vertex{-0.3f, -1,  0.3f, 1, 0, 0});
-    mVertices.push_back(Vertex{-1,    -1,  1,    1, 0, 0});
+    mVertices.push_back(Vertex{-1   ,-1,-1   ,1, 0, 0});
+    mVertices.push_back(Vertex{-0.3f,-1, 0.3f,1, 0, 0});
+    mVertices.push_back(Vertex{-1   ,-1, 1   ,1, 0, 0});
 
-    mVertices.push_back(Vertex{-1,    -1,  1,    1, 0, 0});
-    mVertices.push_back(Vertex{-0.3f, -1,  0.3f, 1, 0, 0});
-    mVertices.push_back(Vertex{ 1,    -1,  1,    1, 0, 0});
+    mVertices.push_back(Vertex{-1   ,-1, 1   ,1, 0, 0});
+    mVertices.push_back(Vertex{-0.3f,-1, 0.3f,1, 0, 0});
+    mVertices.push_back(Vertex{ 1   ,-1, 1   ,1, 0, 0});
 
-    mVertices.push_back(Vertex{-0.3f, -1,  0.3f, 1, 0, 0});
-    mVertices.push_back(Vertex{ 0.3f, -1,  0.3f, 1, 0, 0});
-    mVertices.push_back(Vertex{ 1,    -1,  1,    1, 0, 0});
+    mVertices.push_back(Vertex{-0.3f,-1, 0.3f,1, 0, 0});
+    mVertices.push_back(Vertex{ 0.3f,-1, 0.3f,1, 0, 0});
+    mVertices.push_back(Vertex{ 1   ,-1, 1   ,1, 0, 0});
 
-    mVertices.push_back(Vertex{ 1,    -1,  1,    1, 0, 0});
-    mVertices.push_back(Vertex{ 0.3f, -1,  0.3f, 1, 0, 0});
-    mVertices.push_back(Vertex{ 1,    -1, -1,    1, 0, 0});
+    mVertices.push_back(Vertex{ 1   ,-1, 1   ,1, 0, 0});
+    mVertices.push_back(Vertex{ 0.3f,-1, 0.3f,1, 0, 0});
+    mVertices.push_back(Vertex{ 1   ,-1,-1   ,1, 0, 0});
 
-    mVertices.push_back(Vertex{ 0.3f, -1,  0.3f, 1, 0, 0});
-    mVertices.push_back(Vertex{ 0.3f, -1,  -1,   1, 0, 0});
-    mVertices.push_back(Vertex{ 1,    -1, -1,    1, 0, 0});
+    mVertices.push_back(Vertex{ 0.3f,-1, 0.3f,1, 0, 0});
+    mVertices.push_back(Vertex{ 0.3f,-1,-1   ,1, 0, 0});
+    mVertices.push_back(Vertex{ 1   ,-1,-1   ,1, 0, 0});
+
 
     // -z veggen
-    mVertices.push_back(Vertex{-1,-1,-1,0,1,0});
-    mVertices.push_back(Vertex{1,-1,-1,0,1,0});
-    mVertices.push_back(Vertex{-1,1,-1,0,1,0});
-    mVertices.push_back(Vertex{1,-1,-1,0,1,0});
-    mVertices.push_back(Vertex{1,1,-1,0,1,0});
-    mVertices.push_back(Vertex{-1,1,-1,0,1,0});
+    mVertices.push_back(Vertex{-1,-1,-1,1, 1, 0});
+    mVertices.push_back(Vertex{ 1,-1,-1,1, 1, 0});
+    mVertices.push_back(Vertex{-1, 1,-1,1, 1, 0});
+    mVertices.push_back(Vertex{ 1,-1,-1,1, 1, 0});
+    mVertices.push_back(Vertex{ 1, 1,-1,1, 1, 0});
+    mVertices.push_back(Vertex{-1, 1,-1,1, 1, 0});
 
     // -x veggen
-    mVertices.push_back(Vertex{-1,1,-1,0,0,1});
-    mVertices.push_back(Vertex{-1,-1,-1,0,0,1});
-    mVertices.push_back(Vertex{-1,-1,1,0,0,1});
-    mVertices.push_back(Vertex{-1,1,-1,0,0,1});
-    mVertices.push_back(Vertex{-1,-1,1,0,0,1});
-    mVertices.push_back(Vertex{-1,1,1,0,0,1});
+    mVertices.push_back(Vertex{-1,1,-1,1, 0, 1});
+    mVertices.push_back(Vertex{-1,-1,-1,1, 0, 1});
+    mVertices.push_back(Vertex{-1,-1,1,1, 0, 1});
+    mVertices.push_back(Vertex{-1,1,-1,1, 0, 1});
+    mVertices.push_back(Vertex{-1,-1,1,1, 0, 1});
+    mVertices.push_back(Vertex{-1,1,1,1, 0, 1});
 
     // +y veggen
-    mVertices.push_back(Vertex{1,1,1,1,0,1});
-    mVertices.push_back(Vertex{-1,1,1,1,0,1});
-    mVertices.push_back(Vertex{-1,1,-1,1,0,1});
-    mVertices.push_back(Vertex{1,1,1,1,0,1});
-    mVertices.push_back(Vertex{-1,1,-1,1,0,1});
-    mVertices.push_back(Vertex{1,1,-1,1,0,1});
+    mVertices.push_back(Vertex{1,1,1,0, 1, 0});
+    mVertices.push_back(Vertex{-1,1,1,0, 1, 0});
+    mVertices.push_back(Vertex{-1,1,-1,0, 1, 0});
+    mVertices.push_back(Vertex{1,1,1,0, 1, 0});
+    mVertices.push_back(Vertex{-1,1,-1,0, 1, 0});
+    mVertices.push_back(Vertex{1,1,-1,0, 1, 0});
 
     // + z veggen
-    mVertices.push_back(Vertex{-1,-1,1,1,1,0});
-    mVertices.push_back(Vertex{1,1,1,1,1,0});
-    mVertices.push_back(Vertex{-1,1,1,1,1,0});
-    mVertices.push_back(Vertex{-1,-1,1,1,1,0});
-    mVertices.push_back(Vertex{1,-1,1,1,1,0});
-    mVertices.push_back(Vertex{1,1,1,1,1,0});
+    mVertices.push_back(Vertex{-1,-1,1,0, 0, 1});
+    mVertices.push_back(Vertex{1,1,1,0, 0, 1});
+    mVertices.push_back(Vertex{-1,1,1,0, 0, 1});
+    mVertices.push_back(Vertex{-1,-1,1,0, 0, 1});
+    mVertices.push_back(Vertex{1,-1,1,0, 0, 1});
+    mVertices.push_back(Vertex{1,1,1,0, 0, 1});
 
     // + x veggen
-    mVertices.push_back(Vertex{1,-1,-1,0,1,1});
-    mVertices.push_back(Vertex{1,1,1,0,1,1});
-    mVertices.push_back(Vertex{1,-1,1,0,1,1});
-    mVertices.push_back(Vertex{1,-1,-1,0,1,1});
-    mVertices.push_back(Vertex{1,1,-1,0,1,1});
-    mVertices.push_back(Vertex{1,1,1,0,1,1});
+    mVertices.push_back(Vertex{1,-1,-1,0, 1, 1});
+    mVertices.push_back(Vertex{1,1,1,0, 1, 1});
+    mVertices.push_back(Vertex{1,-1,1,0, 1, 1});
+    mVertices.push_back(Vertex{1,-1,-1,0, 1, 1});
+    mVertices.push_back(Vertex{1,1,-1,0, 1, 1});
+    mVertices.push_back(Vertex{1,1,1,0, 1, 1});
 }
 
 House::~House()
@@ -106,13 +107,14 @@ void House::init(GLint matrixUniform)
 
 void House::draw()
 {
- if (!isActive)
+    if (!isActive)
        return;
 
- glBindVertexArray( mVAO );
- glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
- glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
+    glBindVertexArray( mVAO );
+    glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
+    glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
 }
+
 void House::draw(QMatrix4x4& transformMatrix)
 {
     if (isActive)
