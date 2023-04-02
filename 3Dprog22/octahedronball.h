@@ -14,6 +14,8 @@ public:
    void init(GLint matrixUniform) override;
    void draw() override;
    void draw(QMatrix4x4& transformMatrix) override;
+   void draw(GLint textureUniform) override;
+   void draw(GLint textureUniform, QMatrix4x4& transformMatrix) override;
 
 private:
    int m_recursions;
@@ -23,6 +25,8 @@ private:
    void subDivide(const QVector3D& a, const QVector3D& b, const QVector3D& c, int n);
 
    void oktaederUnitBall();
+
+    unsigned int texture;
 };
 
 #endif // OCTAHEDRONBALL_H

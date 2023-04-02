@@ -16,6 +16,7 @@ SOURCES += main.cpp \
     door.cpp \
     gameobject.cpp \
     house.cpp \
+    houseobject.cpp \
     interpolation.cpp \
     landscapes.cpp \
     light.cpp \
@@ -54,6 +55,7 @@ HEADERS += \
     door.h \
     gameobject.h \
     house.h \
+    houseobject.h \
     interpolation.h \
     landscapes.h \
     light.h \

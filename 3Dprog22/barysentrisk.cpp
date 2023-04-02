@@ -79,10 +79,10 @@ float barysentrisk::bary(GameObject* playerPos, VisualObject* landscape)
         else
         {
             //Logger::getInstance()->logText("playerPos: x:" + std::to_string(playerPos->getPosition3D().x()) + " | y:" + std::to_string(playerPos->getPosition3D().y()) + " | z:" + std::to_string(playerPos->getPosition3D().z()));
-            Logger::getInstance()->logText("u: " + std::to_string(u) + " | v: " + std::to_string(v)+ " | w: " + std::to_string(w));
+            //Logger::getInstance()->logText("u: " + std::to_string(u) + " | v: " + std::to_string(v)+ " | w: " + std::to_string(w));
 
-            Logger::getInstance()->logText("u + v + w = " + std::to_string((u + v + w)));
-            Logger::getInstance()->logText("Vertex no: " + std::to_string(i));
+            //Logger::getInstance()->logText("u + v + w = " + std::to_string((u + v + w)));
+            //Logger::getInstance()->logText("Vertex no: " + std::to_string(i));
 
             return (landscape->getVertex(i).GetZ() + 1);
         }

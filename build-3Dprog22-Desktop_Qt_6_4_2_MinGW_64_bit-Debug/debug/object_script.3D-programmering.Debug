@@ -9,6 +9,7 @@ debug/disc.o
 debug/door.o
 debug/gameobject.o
 debug/house.o
+debug/houseobject.o
 debug/interpolation.o
 debug/landscapes.o
 debug/light.o

@@ -31,6 +31,7 @@
 #include "transform.h"
 #include "pickup.h"
 #include "light.h"
+#include "houseobject.h"
 
 #include "uniforms.h"
 #include "barysentrisk.h"
@@ -81,14 +82,6 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     //--------------------
 
 
-    //Make The Window appear
-    mObjects.push_back(new XYZ());
-
-
-
-    mMap.insert(std::pair<std::string, VisualObject*>{"PickUp1", new OctahedronBall(0)});
-    mMap["PickUp1"]->move(4.f, 0.f, 0.f);
-
     pAx = -3; pAy = 3;
     pBx = -2; pBy = 2;
     pCx = -1; pCy = 1;
@@ -97,77 +90,81 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     pFx = 2; pFy = 2;
     pGx = 3; pGy = 3;
 
+
+    //--------------------
+
+
+    // Scene 1 //
+
+    //XYZ
+    mObjects.push_back(new XYZ());
+
+    //Player
+    mGameObjects.insert(std::pair<std::string, GameObject*>{"Player", new Player()});
+    mGameObjects["Player"]->move(-8, -8, 1);
+    mCamera->setFollowGameObject(mGameObjects["Player"]);
+
+    //Landscape
+    mPhongObjects.insert(std::pair<std::string, VisualObject*>{"Landscape", new Landscape(QVector2D(-10, -10), QVector2D(10, 10))});
+
+    //Ball
+    mMap.insert(std::pair<std::string, VisualObject*>{"Ball", new OctahedronBall(4)});
+    mMap["Ball"]->move(-10, 0, 1);
+
+    //Parabel
     mMap.insert(std::pair<std::string, VisualObject*>{"Parabel", new Parabel(pAx, pAy,   pBx, pBy,   pCx, pCy,   pDx, pDy,   pEx, pEy,   pFx, pFy,   pGx, pGy)});
+    mMap["Parabel"]->move(0, 0, 10);
 
-
-    //Scene 1
+    //House
     mPhongObjects.insert(std::pair<std::string, VisualObject*>{"House", new House()});
-    mPhongObjects["House"]->move(10.f, 0.f, 4);
+    mPhongObjects["House"]->move(10, 0, 4);
     mPhongObjects["House"]->scale(5);
     mPhongObjects["House"]->rotate(270, QVector3D(0, 0, 1));
 
-    //Light to scene 1
-    mPhongObjects.insert(std::pair<std::string, VisualObject*>{"Light", new Cube()});
-    mPhongObjects["Light"]->move(0.f, 0.f, 4.f);
+//    textureObjects.push_back(new House());
+//    textureObjects[0]->setPosition(QVector3D(10, 0, 4));
+//    textureObjects[0]->scale(QVector3D(5, 5, 5));
+//    textureObjects[0]->rotate(270, QVector3D(0, 0, 1));
 
-
-    mPhongObjects.insert(std::pair<std::string, VisualObject*>{"Landscape", new Landscape(QVector2D(-10, -10), QVector2D(10, 10))});
-
+//    mGameObjects.insert(std::pair<std::string, GameObject*>{"HouseObject", new HouseObject()});
+//    mGameObjects["HouseObject"]->move(10, 0, 4);
+    //mGameObjects["HouseObject"]->scale(5);
+    //mGameObjects["HouseObject"]->rotate(270, QVector3D(0, 0, 1));
 
     mGameObjects.insert(std::pair<std::string, GameObject*>{"Door", new Door()});
 
-    mGameObjects.insert(std::pair<std::string, GameObject*>{"Player", new Player()});
-    mCamera->setFollowGameObject(mGameObjects["Player"]);
+    //Pickups
+    mGameObjects.insert(std::pair<std::string, GameObject*>{"PickUp1", new PickUp()});
+    mGameObjects["PickUp1"]->move(-6, -9, 1);
+    mGameObjects.insert(std::pair<std::string, GameObject*>{"PickUp2", new PickUp()});
+    mGameObjects["PickUp2"]->move(-5, -1, 1);
+    mGameObjects.insert(std::pair<std::string, GameObject*>{"PickUp3", new PickUp()});
+    mGameObjects["PickUp3"]->move(-4, -4, 1);
+    mGameObjects.insert(std::pair<std::string, GameObject*>{"PickUp4", new PickUp()});
+    mGameObjects["PickUp4"]->move(-3, -3, 1);
+    mGameObjects.insert(std::pair<std::string, GameObject*>{"PickUp5", new PickUp()});
+    mGameObjects["PickUp5"]->move(-2, -7, 1);
 
-    for (int i = 0; i < 8; i++)
-    {
-        mGameObjects.insert(std::pair<std::string, GameObject*>{"PickUp" + std::to_string(i), new PickUp()});
-    }
+    //Image on the ground
+    //textureObjects.push_back(new TriangleSurface());
+    //textureObjects[0]->scale(QVector3D(100, 100, 0));
+
+
+    //-----
+
 
     //Scene 2
     mObjectMapScene2.insert(std::pair<std::string, VisualObject*>{"HouseInside", new Cube()});
     mObjectMapScene2["HouseInside"]->move(0, 0, 19);
     mObjectMapScene2["HouseInside"]->scale(20);
 
-
-    //mObjects.push_back(new Tetraeder(Position(2.2f, 0, 0), QVector3D(2, 2, 2)));
-
-    //mObjects.push_back(new TriangleSurface("Data.txt"));
-    //mObjects.push_back(new TriangleSurface("DataPoints.txt"));
-
-    //mObjects.push_back(new Disc());
-
-    //Run Matrix Calculation - Math Oblig 2 - Task 1
-//    pAx = -3; pAy = 3;
-//    pBx = -2; pBy = 2;
-//    pCx = -1; pCy = 1;
-//    pDx = 0; pDy = 0;
-//    pEx = 1; pEy = 1;
-//    pFx = 2; pFy = 2;
-//    pGx = 3; pGy = 3;
-    //mObjects.push_back(new Parabel(pAx, pAy,   pBx, pBy,   pCx, pCy,   pDx, pDy,   pEx, pEy,   pFx, pFy,   pGx, pGy));
-    //mObjects.push_back(new Points(pAx, pAy,   pBx, pBy,   pCx, pCy,   pDx, pDy,   pEx, pEy,   pFx, pFy,   pGx, pGy));
-
-    //Run Interpolation Calculation - Math Oblig 2 - Task 2
-//    pAx = -2; pAy = 2;
-//    pBx = -1; pBy = 1;
-//    pCx = 0; pCy = 0;
-//    pDx = 2; pDy = 2;
-    //mObjects.push_back(new Interpolation(QVector2D(pAx, pAy), QVector2D(pBx, pBy), QVector2D(pCx, pCy), QVector2D(pDx, pDy)));
-    //mObjects.push_back(new Points(pAx, pAy,   pBx, pBy,   pCx, pCy,   pDx, pDy));
-
-
     //Alternativ: bygger en scene - legger inn objekter
-    //Erstatter std::vector<VisualObject*> med unordered map
     mObjectMapScene2.insert(std::pair<std::string, VisualObject*>{"xyz", new XYZ()});
 
-    textureObjects.push_back(new TriangleSurface());
-    textureObjects[0]->scale(QVector3D(100, 100, 0));
 
-    //mMap.insert(std::pair<std::string, VisualObject*>{"triangleSurface", new TriangleSurface("Data.txt")});
-    //mMap.insert(std::pair<std::string, VisualObject*> {"mia", mia});
-    //std::pair<std::string, VisualObject*> par{"disc", mDisc};
-    //mMap.insert(par);
+
+    //-----
+
 
     for (auto it = mObjects.begin(); it != mObjects.end(); it++)
     {
@@ -179,6 +176,10 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
         (*it).second->setScene(1);
     }
     for (auto it = mPhongObjects.begin(); it != mPhongObjects.end(); it++)
+    {
+        (*it).second->setScene(1);
+    }
+    for (auto it = mTextureObjects.begin(); it != mTextureObjects.end(); it++)
     {
         (*it).second->setScene(1);
     }
@@ -260,24 +261,6 @@ void RenderWindow::init()
     //    glEnable(GL_CULL_FACE);       //draws only front side of models - usually what you want - test it out!
     glClearColor(0.4f, 0.4f, 0.4f, 1.0f);    //gray color used in glClear GL_COLOR_BUFFER_BIT
 
-    //Compile shaders:
-    //NB: hardcoded path to files! You have to change this if you change directories for the project.
-    //Qt makes a build-folder besides the project folder. That is why we go down one directory
-    // (out of the build-folder) and then up into the project folder.
-
-    //mShaderProgram[0] = new Shader("../3Dprog22/plainshader.vert", "../3Dprog22/plainshader.frag");
-    //mLogger->logText("Plain shader program id: " + std::to_string(mShaderProgram[0]->getProgram()) );
-
-    //mShaderProgram[1]= new Shader("../3Dprog22/textureshader.vert", "../3Dprog22/textureshader.frag");
-    //mLogger->logText("Texture shader program id: " + std::to_string(mShaderProgram[1]->getProgram()) );
-
-    //mShaderProgram[2]= new Shader("../3Dprog22/phongshader.vert", "../3Dprog22/phongshader.frag");
-    //mLogger->logText("Texture shader program id: " + std::to_string(mShaderProgram[2]->getProgram()) );
-
-    //setupPlainShader(0);
-    //setupTextureShader(1);
-    //setupPhongShader(2);
-
     mShaderProgram = new Shader("../3Dprog22/plainshader.vert", "../3Dprog22/plainshader.frag");
     shaders.insert(std::pair<std::string, Shader*>{"PlainShader", mShaderProgram});
 
@@ -326,17 +309,14 @@ void RenderWindow::init()
     {
         (*it)->init(shaders["PlainShader"]->getUniform()->mMmatrixUniform);
     }
-
     for (auto it = mMap.begin(); it != mMap.end(); it++)
     {
         (*it).second->init(shaders["PlainShader"]->getUniform()->mMmatrixUniform);
     }
-
     for (auto it = mObjectMapScene2.begin(); it != mObjectMapScene2.end(); it++)
     {
         (*it).second->init(shaders["PlainShader"]->getUniform()->mMmatrixUniform);
     }
-
     for (auto it = mGameObjects.begin(); it != mGameObjects.end(); it++)
     {
         (*it).second->awake();
@@ -346,6 +326,10 @@ void RenderWindow::init()
     for (auto it = textureObjects.begin(); it != textureObjects.end(); it++)
     {
         (*it)->init(shaders["TextureShader"]->getUniform()->mMmatrixUniform);
+    }
+    for (auto it = mTextureObjects.begin(); it != mTextureObjects.end(); it++)
+    {
+        (*it).second->init(shaders["TextureShader"]->getUniform()->mMmatrixUniform);
     }
 
     glUseProgram(shaders["PhongShader"]->getProgram());
@@ -453,6 +437,19 @@ void RenderWindow::render()
        if((*it)->getScene() == activeScene)
        {
            (*it)->draw(shaders["TextureShader"]->getUniform()->mMmatrixUniform);
+       }
+   }
+   for (auto it = mTextureObjects.begin(); it != mTextureObjects.end(); it++)
+   {
+       if ((*it).second != nullptr)
+       {
+           if((*it).second->getScene() == activeScene)
+           {
+               QVector3D objectColor = (*it).second->getObjectColor();
+
+               shaders["TextureShader"]->UploadObjectColor(objectColor);
+               (*it).second->draw();
+           }
        }
    }
 
@@ -692,10 +689,10 @@ void RenderWindow::input()
 
 
     //Logger
-    mLogger->logText("Triangle height: " + std::to_string(baryc));
-    mLogger->logText("PlayerPos: x" + std::to_string(mGameObjects["Player"]->getPosition3D().x()) + " | y:" + std::to_string(mGameObjects["Player"]->getPosition3D().y()) + " | z:" + std::to_string(mGameObjects["Player"]->getPosition3D().z()));
-    mLogger->logText("----------------------------");
-    mLogger->logText("");
+    //mLogger->logText("Triangle height: " + std::to_string(baryc));
+    //mLogger->logText("PlayerPos: x" + std::to_string(mGameObjects["Player"]->getPosition3D().x()) + " | y:" + std::to_string(mGameObjects["Player"]->getPosition3D().y()) + " | z:" + std::to_string(mGameObjects["Player"]->getPosition3D().z()));
+    //mLogger->logText("----------------------------");
+    //mLogger->logText("");
 
 
 

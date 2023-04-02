@@ -141,15 +141,23 @@ void OctahedronBall::init(GLint matrixUniform)
 
    glBufferData( GL_ARRAY_BUFFER, mVertices.size()*sizeof(Vertex), mVertices.data(), GL_STATIC_DRAW );
 
-
+   // 1st attribute buffer
    glBindBuffer(GL_ARRAY_BUFFER, mVBO);
    glVertexAttribPointer(0, 3, GL_FLOAT,GL_FALSE,sizeof(Vertex), (GLvoid*)0);
    glEnableVertexAttribArray(0);
 
-
+   // 2nd attribute buffer
    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,  sizeof(Vertex),  (GLvoid*)(3 * sizeof(GLfloat)) );
    glEnableVertexAttribArray(1);
 
+   // 3nd attribute buffer : UV
+   glVertexAttribPointer(2,
+                        2,
+                        GL_FLOAT,
+                        GL_FALSE,
+                        sizeof( Vertex ),
+                        (GLvoid*)(6 * sizeof(GLfloat)) );
+   glEnableVertexAttribArray(2);
 
    glBindVertexArray(0);
 }
@@ -186,4 +194,33 @@ void OctahedronBall::draw(QMatrix4x4& transformMatrix)
         glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, transformMatrix.constData());
         glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
     }
+}
+
+void OctahedronBall::draw(GLint textureUniform)
+{
+    if (!isActive)
+          return;
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glUniform1i(textureUniform, 0); // 0 referer til glActiveTexture(GL_TEXTURE0);
+
+    glBindVertexArray( mVAO );
+    glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
+    glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
+}
+
+void OctahedronBall::draw(GLint textureUniform, QMatrix4x4 &transformMatrix)
+{
+    if (!isActive)
+          return;
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glUniform1i(textureUniform, 0); // 0 referer til glActiveTexture(GL_TEXTURE0);
+
+    transformMatrix *= mMatrix;
+    glBindVertexArray( mVAO );
+    glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, transformMatrix.constData());
+    glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
 }

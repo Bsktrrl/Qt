@@ -43,8 +43,6 @@ void VisualObjectComponent::update()
     if (IsActive())
     {
         render(GetOwner()->transform->getMatrix());
-
-
     }
 }
 

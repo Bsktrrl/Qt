@@ -15,7 +15,7 @@ PickUp::PickUp()
     TextureMesh = new VisualObjectComponent(new TriangleSurface(), this, "TextureShader");
     TextureMesh->getObject()->scale(QVector3D(1, 1, 1));
 
-    collider = new SphereCollider(this, 1, QVector3D(0, 1, -1));
+    collider = new SphereCollider(this, 0.5, QVector3D(0, 1, -1));
     collider->setupAttachment(Mesh);
 
     //Set Position

@@ -26,6 +26,7 @@ Texture::Texture(const std::string& filename): QOpenGLFunctions_4_1_Core()
     textureFilename = filename;
     initializeOpenGLFunctions();
     bool success = readBitmap(filename);       //reads the BMP into memory
+
     if(success)
         setTexture();               //set texture up for OpenGL
 }
@@ -106,7 +107,9 @@ void Texture::setTexture()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    if(mAlphaUsed == false)                     //no alpha in this bmp
+    if(mAlphaUsed == false)             //no alpha in this bmp
+    {
+        mLogger->logText("mAlphaUsed == false");
         glTexImage2D(
                     GL_TEXTURE_2D,
                     0,                  //mipmap level
@@ -117,9 +120,30 @@ void Texture::setTexture()
                     GL_BGR,             //format of data from texture file -  bmp uses BGR, not RGB
                     GL_UNSIGNED_BYTE,   //size of each color channel
                     mBitmap);           //pointer to texture in memory
-
+    }
     else                                //alpha is present, so we set up an alpha channel
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mColumns, mRows, 0,  GL_BGRA, GL_UNSIGNED_BYTE, mBitmap);
+    {
+        if (mBitmap != nullptr)
+        {
+            mLogger->logText("Find -mBitmap-");
+
+            glTexImage2D(
+                        GL_TEXTURE_2D,
+                        0,
+                        GL_RGBA,
+                        mColumns,
+                        mRows,
+                        0,
+                        GL_BGRA,
+                        GL_UNSIGNED_BYTE,
+                        mBitmap);
+        }
+        else
+        {
+            mLogger->logText("Cannot find -mBitmap-");
+        }
+
+    }
 
     glGenerateMipmap(GL_TEXTURE_2D);
 }

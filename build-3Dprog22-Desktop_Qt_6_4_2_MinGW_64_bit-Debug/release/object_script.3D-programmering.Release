@@ -9,6 +9,7 @@ release/disc.o
 release/door.o
 release/gameobject.o
 release/house.o
+release/houseobject.o
 release/interpolation.o
 release/landscapes.o
 release/light.o

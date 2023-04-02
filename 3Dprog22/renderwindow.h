@@ -59,37 +59,6 @@ public:
     Shader* GetShader(std::string shaderName) {return shaders[shaderName];}
     void runProgram(std::string shader);
 
-    //Shaders
-//    void setupPlainShader(int shaderIndex);
-//    GLint mMatrixUniform0{-1};
-//    GLint vMatrixUniform0{-1};
-//    GLint pMatrixUniform0{-1};
-
-//    void setupTextureShader(int shaderIndex);
-//    GLint mMatrixUniform1{-1};
-//    GLint vMatrixUniform1{-1};
-//    GLint pMatrixUniform1{-1};
-//    GLint mTextureUniform1{-1};
-
-//    void setupPhongShader(int shaderIndex);
-//    GLint mMatrixUniform2{-1};
-//    GLint vMatrixUniform2{-1};
-//    GLint pMatrixUniform2{-1};
-
-//    //other light shader variables
-//    GLint mLightColorUniform{-1};
-//    GLint mObjectColorUniform{-1};
-//    GLint mAmbientLightStrengthUniform{-1};
-//    GLint mLightPositionUniform{-1};
-//    GLint mCameraPositionUniform{-1};
-//    GLint mSpecularStrengthUniform{-1};
-//    GLint mSpecularExponentUniform{-1};
-//    GLint mLightPowerUniform{-1};
-//    GLint mTextureUniform2{-1};
-
-//    Texture *mTexture[4]{nullptr}; //We can hold 4 textures
-//    Shader *mShaderProgram[4]{nullptr}; //We can hold 4 shaders
-
 private slots:
     void render();          //the actual render - function
 
@@ -162,6 +131,7 @@ private:
 
     std::unordered_map<std::string, VisualObject*> mMap;    // alternativ container
     std::unordered_map<std::string, VisualObject*> mPhongObjects;    // alternativ container
+    std::unordered_map<std::string, VisualObject*> mTextureObjects; //Unordered map of texture files
 
     std::vector<VisualObject*> mObjectVectorScene1;
     std::unordered_map<std::string, VisualObject*> mObjectMapScene2;
