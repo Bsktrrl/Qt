@@ -176,7 +176,7 @@ void House::draw(GLint textureUniform)
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glUniform1i(textureUniform , 0); // 0 referer til glActiveTexture(GL_TEXTURE0);
+    glUniform1i(textureUniform , 0); // 0 reffers to glActiveTexture(GL_TEXTURE0);
 
     glBindVertexArray( mVAO );
     glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
@@ -190,7 +190,7 @@ void House::draw(GLint textureUniform, QMatrix4x4 &transformMatrix)
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glUniform1i(textureUniform , 0); // 0 referer til glActiveTexture(GL_TEXTURE0);
+    glUniform1i(textureUniform , 0); // 0 reffers to glActiveTexture(GL_TEXTURE0);
 
     transformMatrix *= mMatrix;
     glBindVertexArray( mVAO );

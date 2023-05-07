@@ -35,6 +35,7 @@
 
 #include "uniforms.h"
 #include "barysentrisk.h"
+#include "landscapes.h"
 
 RenderWindow* RenderWindow::instance;
 
@@ -47,6 +48,7 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     }
 
     activeScene = 1;
+    pickUpCounter = 0;
 
     //This is sent to QWindow:
     setSurfaceType(QWindow::OpenGLSurface);
@@ -82,18 +84,6 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     //--------------------
 
 
-    pAx = -3; pAy = 3;
-    pBx = -2; pBy = 2;
-    pCx = -1; pCy = 1;
-    pDx = 0; pDy = 0;
-    pEx = 1; pEy = 1;
-    pFx = 2; pFy = 2;
-    pGx = 3; pGy = 3;
-
-
-    //--------------------
-
-
     // Scene 1 //
 
     //XYZ
@@ -107,14 +97,6 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     //Landscape
     mPhongObjects.insert(std::pair<std::string, VisualObject*>{"Landscape", new Landscape(QVector2D(-10, -10), QVector2D(10, 10))});
 
-    //Ball
-    mMap.insert(std::pair<std::string, VisualObject*>{"Ball", new OctahedronBall(4)});
-    mMap["Ball"]->move(-10, 0, 1);
-
-    //Parabel
-    mMap.insert(std::pair<std::string, VisualObject*>{"Parabel", new Parabel(pAx, pAy,   pBx, pBy,   pCx, pCy,   pDx, pDy,   pEx, pEy,   pFx, pFy,   pGx, pGy)});
-    mMap["Parabel"]->move(0, 0, 10);
-
     //House
     mPhongObjects.insert(std::pair<std::string, VisualObject*>{"House", new House()});
     mPhongObjects["House"]->move(10, 0, 4);
@@ -126,39 +108,81 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
 //    textureObjects[0]->scale(QVector3D(5, 5, 5));
 //    textureObjects[0]->rotate(270, QVector3D(0, 0, 1));
 
+    //TestCube
+//    mPhongObjects.insert(std::pair<std::string, VisualObject*>{"House", new Cube(0.5,0.5,0.5,1,0.5,0.5, 1, 1)});
+//    mPhongObjects["House"]->move(10, 0, 4);
+//    mPhongObjects["House"]->scale(10);
+//    mPhongObjects["House"]->rotate(270, QVector3D(0, 0, 1));
+
+
+//    textureObjects.push_back(new Cube(0.5,0.5,0.5,1,0.5,0.5, 1, 1));
+//    textureObjects[0]->setPosition(QVector3D(10, 0, 4));
+//    textureObjects[0]->scale(QVector3D(5, 5, 5));
+//    textureObjects[0]->rotate(270, QVector3D(0, 0, 1));
+
+
+    //House Object
 //    mGameObjects.insert(std::pair<std::string, GameObject*>{"HouseObject", new HouseObject()});
+//    mGameObjects["HouseObject"]->setPosition(0, 0, 0);
 //    mGameObjects["HouseObject"]->move(10, 0, 4);
-    //mGameObjects["HouseObject"]->scale(5);
-    //mGameObjects["HouseObject"]->rotate(270, QVector3D(0, 0, 1));
+//    mGameObjects["HouseObject"]->scale(5);
+//    mGameObjects["HouseObject"]->rotate(270, QVector3D(0, 0, 1));
 
     mGameObjects.insert(std::pair<std::string, GameObject*>{"Door", new Door()});
 
     //Pickups
     mGameObjects.insert(std::pair<std::string, GameObject*>{"PickUp1", new PickUp()});
     mGameObjects["PickUp1"]->move(-6, -9, 1);
+    mGameObjects["PickUp1"]->scale(2);
     mGameObjects.insert(std::pair<std::string, GameObject*>{"PickUp2", new PickUp()});
     mGameObjects["PickUp2"]->move(-5, -1, 1);
+    mGameObjects["PickUp2"]->scale(2);
     mGameObjects.insert(std::pair<std::string, GameObject*>{"PickUp3", new PickUp()});
     mGameObjects["PickUp3"]->move(-4, -4, 1);
+    mGameObjects["PickUp3"]->scale(2);
     mGameObjects.insert(std::pair<std::string, GameObject*>{"PickUp4", new PickUp()});
     mGameObjects["PickUp4"]->move(-3, -3, 1);
+    mGameObjects["PickUp4"]->scale(2);
     mGameObjects.insert(std::pair<std::string, GameObject*>{"PickUp5", new PickUp()});
     mGameObjects["PickUp5"]->move(-2, -7, 1);
-
-    //Image on the ground
-    //textureObjects.push_back(new TriangleSurface());
-    //textureObjects[0]->scale(QVector3D(100, 100, 0));
+    mGameObjects["PickUp5"]->scale(2);
 
 
     //-----
 
 
-    //Scene 2
+    //Parabel
+    pAx = -3; pAy = 3;
+    pBx = -2; pBy = 2;
+    pCx = -1; pCy = 1;
+    pDx = 0; pDy = 0;
+    pEx = 1; pEy = 1;
+    pFx = 2; pFy = 2;
+    pGx = 3; pGy = 3;
+
+    //mMap.insert(std::pair<std::string, VisualObject*>{"Parabel", new Parabel(pAx, pAy,   pBx, pBy,   pCx, pCy,   pDx, pDy,   pEx, pEy,   pFx, pFy,   pGx, pGy)});
+    //mMap["Parabel"]->move(-3, 0, 3);
+
+
+    //Ball
+    mMap.insert(std::pair<std::string, VisualObject*>{"Parabel", new Parabel(pAx, pAy,   pBx, pBy,   pCx, pCy,   pDx, pDy,   pEx, pEy,   pFx, pFy,   pGx, pGy)});
+
+    mMap.insert(std::pair<std::string, VisualObject*>{"Ball", new OctahedronBall(4)});
+    //mMap["Ball"]->movement();
+    //mMap["Ball"]->move(-3, 0, 3);
+    //mMap["Ball"]->scale(0.5);
+
+
+    //--------------------
+
+
+    // Scene 2 //
+
     mObjectMapScene2.insert(std::pair<std::string, VisualObject*>{"HouseInside", new Cube()});
     mObjectMapScene2["HouseInside"]->move(0, 0, 19);
     mObjectMapScene2["HouseInside"]->scale(20);
 
-    //Alternativ: bygger en scene - legger inn objekter
+    //XYZ
     mObjectMapScene2.insert(std::pair<std::string, VisualObject*>{"xyz", new XYZ()});
 
 
@@ -372,6 +396,20 @@ void RenderWindow::render()
    //Camera
    mCamera->update();
 
+   //Rotate Objects
+   mGameObjects["PickUp1"]->rotate(5, QVector3D(50, 50, 1));
+   mGameObjects["PickUp2"]->rotate(5, QVector3D(50, 50, 1));
+   mGameObjects["PickUp3"]->rotate(5, QVector3D(50, 50, 1));
+   mGameObjects["PickUp4"]->rotate(5, QVector3D(50, 50, 1));
+   mGameObjects["PickUp5"]->rotate(5, QVector3D(50, 50, 1));
+
+   //Move with a Parabel
+   //mMap["Ball"]->move(1, 1, 1);
+
+
+   //--------------------
+
+
    for (auto it = mObjects.begin(); it != mObjects.end(); it++)
    {
        if((*it)->getScene() == activeScene)
@@ -398,6 +436,7 @@ void RenderWindow::render()
 
 
    //-----
+
 
    glUseProgram(shaders["PhongShader"]->getProgram());
 
@@ -683,18 +722,13 @@ void RenderWindow::input()
     QVector3D oldPlayerPos = mGameObjects["Player"]->getPosition3D();
     float baryc = bary->bary(mGameObjects["Player"], mPhongObjects["Landscape"]);
 
-    //mCamera->setPosition(QVector3D(oldPlayerPos.x(), oldPlayerPos.y(), baryc));
-    mGameObjects["Player"]->setPosition(QVector3D(oldPlayerPos.x(), oldPlayerPos.y(), baryc));
-
-
+    mGameObjects["Player"]->setPosition(QVector3D(oldPlayerPos.x(), oldPlayerPos.y(), baryc + 1));
 
     //Logger
-    //mLogger->logText("Triangle height: " + std::to_string(baryc));
-    //mLogger->logText("PlayerPos: x" + std::to_string(mGameObjects["Player"]->getPosition3D().x()) + " | y:" + std::to_string(mGameObjects["Player"]->getPosition3D().y()) + " | z:" + std::to_string(mGameObjects["Player"]->getPosition3D().z()));
-    //mLogger->logText("----------------------------");
-    //mLogger->logText("");
-
-
+    mLogger->logText("Triangle height: " + std::to_string(baryc));
+    mLogger->logText("PlayerPos: x" + std::to_string(mGameObjects["Player"]->getPosition3D().x()) + " | y:" + std::to_string(mGameObjects["Player"]->getPosition3D().y()) + " | z:" + std::to_string(mGameObjects["Player"]->getPosition3D().z()));
+    mLogger->logText("");
+    mLogger->logText("----------------------------");
 
     //Move Camera
     if (Keymap[Qt::Key_W] == true)

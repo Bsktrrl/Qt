@@ -21,7 +21,7 @@ float barysentrisk::T_ABX(Vertex vA, Vertex vB, QVector3D x, float t_abc)
 {
     //Trekant ABX
     QVector3D AB = QVector3D(vB.GetX() - vA.GetX(), vB.GetY() - vA.GetY(), vB.GetZ() - vA.GetZ());
-    QVector3D AX = QVector3D(x.x() - vA.GetX(),     x.y() - vA.GetY(),     x.z() - vA.GetZ());
+    QVector3D AX = QVector3D(x.x()     - vA.GetX(), x.y()     - vA.GetY(), x.z()     - vA.GetZ());
 
     float u = (AB.x() * AX.y()) + (AB.y() * AX.x());
 
@@ -32,7 +32,7 @@ float barysentrisk::T_BCX(Vertex vB, Vertex vC, QVector3D x, float t_abc)
 {
     //Trekant BCX
     QVector3D BC = QVector3D(vC.GetX() - vB.GetX(), vC.GetY() - vB.GetY(), vC.GetZ() - vB.GetZ());
-    QVector3D BX = QVector3D(x.x() - vB.GetX(),     x.y() - vB.GetY(),     x.z() - vB.GetZ());
+    QVector3D BX = QVector3D(x.x()     - vB.GetX(), x.y()     - vB.GetY(), x.z()     - vB.GetZ());
 
     float v = (BC.x() * BX.y()) + (BC.y() * BX.x());
 
@@ -78,13 +78,12 @@ float barysentrisk::bary(GameObject* playerPos, VisualObject* landscape)
         }
         else
         {
-            //Logger::getInstance()->logText("playerPos: x:" + std::to_string(playerPos->getPosition3D().x()) + " | y:" + std::to_string(playerPos->getPosition3D().y()) + " | z:" + std::to_string(playerPos->getPosition3D().z()));
-            //Logger::getInstance()->logText("u: " + std::to_string(u) + " | v: " + std::to_string(v)+ " | w: " + std::to_string(w));
+            Logger::getInstance()->logText("Barysentric coordinates: u: " + std::to_string(u) + " | v: " + std::to_string(v)+ " | w: " + std::to_string(w));
 
-            //Logger::getInstance()->logText("u + v + w = " + std::to_string((u + v + w)));
-            //Logger::getInstance()->logText("Vertex no: " + std::to_string(i));
+            Logger::getInstance()->logText("u + v + w = " + std::to_string((u + v + w)));
+            Logger::getInstance()->logText("Vertex no: " + std::to_string(i));
 
-            return (landscape->getVertex(i).GetZ() + 1);
+            return (landscape->getVertex(i).GetZ());
         }
     }
 }

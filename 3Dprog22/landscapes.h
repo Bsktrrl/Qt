@@ -21,7 +21,7 @@ public:
     Color recalc(float z);
 
     int height;
-
+    int oldTriangleCounter;
 };
 
 #endif // LANDSCAPE_H

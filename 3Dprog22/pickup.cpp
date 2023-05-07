@@ -4,6 +4,8 @@
 #include "visualobjectcomponent.h"
 #include "trianglesurface.h"
 
+#include "renderwindow.h"
+
 PickUp::PickUp()
 {
     setName("PickUp");

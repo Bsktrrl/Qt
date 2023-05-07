@@ -148,3 +148,4 @@ QVector3D VisualObject::getPosition3D()
     auto col = mMatrix.column(3);
     return QVector3D(col.x(), col.y(), col.z());
 }
+

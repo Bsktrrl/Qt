@@ -17,6 +17,7 @@ public:
    void draw(GLint textureUniform) override;
    void draw(GLint textureUniform, QMatrix4x4& transformMatrix) override;
 
+
 private:
    int m_recursions;
    int m_indeks;               // brukes i rekursjon, til å bygge m_vertices

@@ -79,6 +79,21 @@ void GameObject::move(float x, float y, float z)
     transform->move(x,y,z);
 }
 
+void GameObject::rotate(float a, QVector3D v)
+{
+    transform->rotate(a, v);
+}
+
+void GameObject::scale(float s)
+{
+    transform->scale(QVector3D(s, s, s));
+}
+
+void GameObject::scale(QVector3D s)
+{
+    transform->scale(s);
+}
+
 void GameObject::addForce(QVector3D force)
 {
 //    if (simulatePhysics)

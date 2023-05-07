@@ -22,6 +22,7 @@ SOURCES += main.cpp \
     light.cpp \
     logger.cpp \
     mainwindow.cpp \
+    movementball.cpp \
     octahedronball.cpp \
     parabel.cpp \
     perlinnoise.cpp \
@@ -61,6 +62,7 @@ HEADERS += \
     light.h \
     logger.h \
     mainwindow.h \
+    movementball.h \
     octahedronball.h \
     parabel.h \
     perlinnoise.h \

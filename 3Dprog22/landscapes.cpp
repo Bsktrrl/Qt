@@ -2,10 +2,12 @@
 
 Landscape::Landscape()
 {
+    oldTriangleCounter = 0;
 }
 
 Landscape::Landscape(QVector2D bottomLeft, QVector2D topRight)
 {
+    oldTriangleCounter = 0;
     height = 0;
 
     float minX = bottomLeft.x();

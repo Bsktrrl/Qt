@@ -15,6 +15,7 @@ release/landscapes.o
 release/light.o
 release/logger.o
 release/mainwindow.o
+release/movementball.o
 release/octahedronball.o
 release/parabel.o
 release/perlinnoise.o

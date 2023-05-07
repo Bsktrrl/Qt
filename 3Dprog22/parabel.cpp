@@ -8,6 +8,8 @@ Parabel::Parabel()
 
 Parabel::Parabel(float Ax, float Ay, float Bx, float By, float Cx, float Cy, float Dx, float Dy, float Ex, float Ey, float Fx, float Fy, float Gx, float Gy)
 {
+    //movementX = 0;
+
     // 1) - Make a Matrix with the y-values
     float* Ymatrix = new float [1*7]
     {
@@ -140,8 +142,8 @@ Parabel::Parabel(float Ax, float Ay, float Bx, float By, float Cx, float Cy, flo
 
     // make mVertecies
     float n = 100;
-    float start = Ax;
-    float end = Gx;
+    start = Ax;
+    end = Gx;
 
     float hi = (end-start)/n;
 
@@ -220,6 +222,8 @@ void Parabel::draw()
     glBindVertexArray( mVAO );
     glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
     glDrawArrays(GL_LINE_STRIP, 0, mVertices.size());
+
+    //movement(Xa, Xb, Xc, start, end);
 }
 void Parabel::draw(QMatrix4x4& transformMatrix)
 {
@@ -230,4 +234,55 @@ void Parabel::draw(QMatrix4x4& transformMatrix)
         glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, transformMatrix.constData());
         glDrawArrays(GL_LINE_STRIP, 0, mVertices.size());
     }
+
+    //movement(Xa, Xb, Xc, start, end);
 }
+
+
+//void Parabel::movement(float a_1, float b_1, float c_1, float start, float end)
+//{
+//    float x = movementX;
+
+//    //Check which function (no.1 or no.2)
+//    //Check true or false
+
+//    bool dir = true;
+
+//    //If x are too low compared to the parabel
+//    if(x <= start)
+//    {
+//        x = start;
+//        dir = true;
+//        float y = a_1 * (x * x) + b_1 * x + c_1;
+
+//        setPosition(QVector3D(x, y, 0));
+//        x += 0.1;
+
+//    }
+//    //If x are too high compared to the parabel
+//    else if(x >= end)
+//    {
+//        x = end;
+//        dir = false;
+//        float y = a_1 * (x * x) + b_1 * x + c_1;
+
+//        setPosition(QVector3D(x, y, 0));
+//        x -= 0.1;
+//    }
+//    //If x are in between start/end point of the parabel
+//    else if(x > start && x < end)
+//    {
+//        float y = a_1 * (x * x) + b_1 * x + c_1;
+
+//        setPosition(QVector3D(x, y, 0));
+
+//        if(dir)
+//        {
+//            x += 0.1;
+//        }
+//        else if(!dir)
+//        {
+//            x -= 0.1;
+//        }
+//    }
+//}

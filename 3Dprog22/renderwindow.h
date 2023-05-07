@@ -23,6 +23,7 @@ class Shader;
 class MainWindow;
 class GameObject;
 class barysentrisk;
+class Landscape;
 
 /// This inherits from QWindow to get access to the Qt functionality and
 // OpenGL surface.
@@ -58,6 +59,9 @@ public:
 
     Shader* GetShader(std::string shaderName) {return shaders[shaderName];}
     void runProgram(std::string shader);
+
+    int pickUpCounter;
+
 
 private slots:
     void render();          //the actual render - function
@@ -95,6 +99,7 @@ private:
 
     Camera* mCamera;
     barysentrisk* bary;
+    Landscape* landscape;
 
     void init();            //initialize things we need before rendering
 

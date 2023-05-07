@@ -15,6 +15,7 @@ debug/landscapes.o
 debug/light.o
 debug/logger.o
 debug/mainwindow.o
+debug/movementball.o
 debug/octahedronball.o
 debug/parabel.o
 debug/perlinnoise.o

@@ -68,6 +68,9 @@ public:
     void setPosition(float x, float y, float z);
     void setPosition(QVector3D pos);
     void move(float x, float y, float z);
+    void rotate(float a, QVector3D v);
+    void scale(float s);
+    void scale(QVector3D s);
 
     void addForce(QVector3D force);
 

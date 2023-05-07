@@ -14,11 +14,18 @@ public:
     float Xb;
     float Xc;
 
+    float start;
+    float end;
+
     void init(GLint matrixUniform) override;
     void draw() override;
     void draw(QMatrix4x4& transformMatrix) override;
 
     float f(float z) {return (Xa * z * z) + (Xb * z) + Xc; };
+
+
+    //void movement(float a_1, float b_1, float c_1, float start, float end);
+    //float movementX {0};
 
 private:
     //QGenericMatrix<7, 3, float> A;
